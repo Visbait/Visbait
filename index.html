@@ -369,7 +369,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--surface2);color:var(--tex
 .prof-stat-val{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--water)}
 .prof-stat-lbl{font-size:11px;color:var(--text-muted);margin-top:2px}
 .prof-actions{display:flex;gap:8px}
-.prof-edit-btn{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--border);background:none;font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;color:var(--text)}
+.prof-edit-btn{flex:1;padding:10px;border-radius:10px;border:none;background:var(--teal,#1a85c4);font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;color:#fff;transition:all .2s}
+.prof-edit-btn:hover{background:#1570a8}
 .prof-share-btn{width:42px;height:42px;border-radius:10px;border:1.5px solid var(--border);background:none;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .prof-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface);overflow-x:auto;position:sticky;top:0;z-index:5}
 .prof-tabs::-webkit-scrollbar{display:none}
@@ -1202,8 +1203,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--surface2);color:var(--tex
   <div class="nav-right">
     <button class="nav-icon-btn" onclick="openVip()" title="VIP Perks" style="background:linear-gradient(135deg,rgba(255,215,0,.2),rgba(255,165,0,.1));border-color:rgba(255,215,0,.4)">👑</button>
     <button class="nav-icon-btn" onclick="openLeaderboard()" title="Leaderboard">🏅<span class="nav-badge" style="background:var(--amber);color:var(--water)">!</span></button>
-    <button class="nav-icon-btn" onclick="openMessages()">💬<span class="nav-badge">4</span></button>
-    <button class="nav-icon-btn">🔔<span class="nav-badge">2</span></button>
+    <button class="nav-icon-btn" onclick="openMessages()">💬<span class="nav-badge" id="msg-badge" style="display:none">0</span></button>
+    <button class="nav-icon-btn" id="notif-btn">🔔<span class="nav-badge" id="notif-badge" style="display:none">0</span></button>
   </div>
 </nav>
 
@@ -1971,9 +1972,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--surface2);color:var(--tex
       </div>
     </div>
     <div class="prof-handle" id="prof-handle-el">@JakeDanvers · Crystal Lake, MN</div>
-    <div class="prof-bio" id="prof-bio-el">Bass & walleye chaser 🎣 Weekend tournament angler. 12lb PB largemouth Oct '24. Always early, always on the water.</div>
-    <div class="prof-badges"><div class="prof-badge">🏆 Tournament Angler</div><div class="prof-badge">🐟 Bass Specialist</div><div class="prof-badge">📍 Top Contributor</div></div>
-    <div class="prof-stats"><div class="prof-stat"><div class="prof-stat-val">847</div><div class="prof-stat-lbl">Posts</div></div><div class="prof-stat"><div class="prof-stat-val">3.2k</div><div class="prof-stat-lbl">Followers</div></div><div class="prof-stat"><div class="prof-stat-val">412</div><div class="prof-stat-lbl">Following</div></div><div class="prof-stat"><div class="prof-stat-val">24</div><div class="prof-stat-lbl">Catches</div></div></div>
+    <div class="prof-bio" id="prof-bio-el" style="color:var(--text-muted);font-style:italic">Add a bio in Edit Profile...</div>
+    <div class="prof-badges" id="prof-badges-el"></div>
+    <div class="prof-stats">
+      <div class="prof-stat"><div class="prof-stat-val" id="stat-posts">0</div><div class="prof-stat-lbl">Posts</div></div>
+      <div class="prof-stat"><div class="prof-stat-val" id="stat-followers">0</div><div class="prof-stat-lbl">Followers</div></div>
+      <div class="prof-stat"><div class="prof-stat-val" id="stat-following">0</div><div class="prof-stat-lbl">Following</div></div>
+      <div class="prof-stat"><div class="prof-stat-val" id="stat-catches">0</div><div class="prof-stat-lbl">Catches</div></div>
+    </div>
     <div class="prof-actions">
       <button class="prof-edit-btn" onclick="openEditProfile()">✏️ Edit Profile</button>
       <button class="prof-share-btn" onclick="sharePin(0)" title="Share Profile">↗</button>
@@ -1988,36 +1994,33 @@ body{font-family:'DM Sans',sans-serif;background:var(--surface2);color:var(--tex
   </div>
 
   <div id="prof-posts" class="post-grid">
-    <div class="grid-item" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9)" onclick="openProof(0)"><span style="font-size:38px">🎣</span><div class="ach-stamp">🏆</div><div class="grid-overlay"><span>❤️ 127</span></div></div>
-    <div class="grid-item" style="background:#e8f4fd" onclick="openProof(1)"><span style="font-size:38px">🌊</span><div class="grid-overlay"><span>❤️ 89</span></div></div>
-    <div class="grid-item" style="background:#fff3e0" onclick="openProof(2)"><span style="font-size:38px">🏆</span><div class="ach-stamp">🏆</div><div class="grid-overlay"><span>❤️ 204</span></div></div>
-    <div class="grid-item" style="background:#f3e5f5" onclick="openProof(3)"><span style="font-size:38px">🐟</span><div class="grid-overlay"><span>❤️ 67</span></div></div>
-    <div class="grid-item" style="background:#e3f2fd" onclick="openProof(1)"><span style="font-size:38px">🌅</span><div class="grid-overlay"><span>❤️ 143</span></div></div>
-    <div class="grid-item" style="background:#fce4ec" onclick="openProof(4)"><span style="font-size:38px">🪝</span><div class="ach-stamp">🏆</div><div class="grid-overlay"><span>❤️ 55</span></div></div>
-    <div class="grid-item" style="background:#e8f5e9" onclick="openProof(1)"><span style="font-size:38px">🚤</span><div class="grid-overlay"><span>❤️ 91</span></div></div>
-    <div class="grid-item" style="background:#fff8e1" onclick="openProof(3)"><span style="font-size:38px">🐠</span><div class="grid-overlay"><span>❤️ 38</span></div></div>
-    <div class="grid-item" style="background:#e0f7fa" onclick="openProof(1)"><span style="font-size:38px">🧊</span><div class="grid-overlay"><span>❤️ 72</span></div></div>
+    <div id="prof-posts-empty" style="grid-column:1/-1;text-align:center;padding:40px 16px">
+      <div style="font-size:44px;margin-bottom:10px">📷</div>
+      <div style="font-weight:700;font-size:15px;color:var(--text);margin-bottom:6px">No posts yet</div>
+      <div style="font-size:13px;color:var(--text-muted)">Share your first catch!</div>
+    </div>
   </div>
 
   <div id="prof-reels" class="post-grid" style="display:none">
-    <div class="grid-item is-reel" style="background:linear-gradient(135deg,#0a3d5c,#1a85c4)" onclick="openProof(0)"><span style="font-size:38px">🎣</span><div class="ach-stamp">🏆</div><div class="grid-overlay"><span>❤️ 2.4k</span></div></div>
-    <div class="grid-item is-reel" style="background:linear-gradient(135deg,#533ab7,#9f77dd)" onclick="openProof(1)"><span style="font-size:38px">🌊</span><div class="grid-overlay"><span>❤️ 990</span></div></div>
-    <div class="grid-item is-reel" style="background:linear-gradient(135deg,#2d6a4f,#52b788)" onclick="openProof(3)"><span style="font-size:38px">🐟</span><div class="grid-overlay"><span>❤️ 1.1k</span></div></div>
+    <div style="grid-column:1/-1;text-align:center;padding:40px 16px">
+      <div style="font-size:44px;margin-bottom:10px">🎬</div>
+      <div style="font-weight:700;font-size:15px;color:var(--text);margin-bottom:6px">No reels yet</div>
+      <div style="font-size:13px;color:var(--text-muted)">Post your first CastReel!</div>
+    </div>
   </div>
 
   <div id="prof-catches" class="post-grid" style="display:none">
-    <div class="grid-item" style="background:#e8f5e9" onclick="openProof(0)"><span style="font-size:38px">🎣</span><div class="ach-stamp">🏆</div><div class="grid-overlay"><span>12 lb Bass</span></div></div>
-    <div class="grid-item" style="background:#e8f4fd" onclick="openProof(3)"><span style="font-size:38px">🐟</span><div class="grid-overlay"><span>3.2 lb Trout</span></div></div>
-    <div class="grid-item" style="background:#fff3e0" onclick="openProof(2)"><span style="font-size:38px">🏆</span><div class="ach-stamp">🏆</div><div class="grid-overlay"><span>52 lb Striper</span></div></div>
-    <div class="grid-item" style="background:#fce4ec" onclick="openProof(4)"><span style="font-size:38px">🦈</span><div class="ach-stamp">🏆</div><div class="grid-overlay"><span>40 lb Monster</span></div></div>
-    <div class="grid-item" style="background:#e3f2fd" onclick="openProof(3)"><span style="font-size:38px">🐡</span><div class="grid-overlay"><span>1.4 lb Bluegill</span></div></div>
-    <div class="grid-item" style="background:#f3e5f5" onclick="openProof(0)"><span style="font-size:38px">🎣</span><div class="grid-overlay"><span>8.5 lb Bass</span></div></div>
+    <div style="grid-column:1/-1;text-align:center;padding:40px 16px">
+      <div style="font-size:44px;margin-bottom:10px">🐟</div>
+      <div style="font-weight:700;font-size:15px;color:var(--text);margin-bottom:6px">No catches logged yet</div>
+      <div style="font-size:13px;color:var(--text-muted)">Log your first catch to start earning achievements!</div>
+    </div>
   </div>
 
   <!-- ACHIEVEMENTS PANEL -->
   <div id="prof-ach" style="display:none;background:var(--surface2)">
     <div class="ach-banner">
-      <div class="ach-banner-title">🏆 Jake's Trophy Room</div>
+      <div class="ach-banner-title" id="trophy-room-title">🏆 Your Trophy Room</div>
       <div class="ach-banner-sub">Verified catches & milestones — every badge links to your proof post</div>
       <div class="ach-summary"><div class="ach-sum-card"><div class="ach-sum-icon">🥇</div><div class="ach-sum-val">8</div><div class="ach-sum-lbl">Unlocked</div></div><div class="ach-sum-card"><div class="ach-sum-icon">🔒</div><div class="ach-sum-val">6</div><div class="ach-sum-lbl">Locked</div></div><div class="ach-sum-card"><div class="ach-sum-icon">⭐</div><div class="ach-sum-val">2,340</div><div class="ach-sum-lbl">Total XP</div></div></div>
     </div>
@@ -2334,6 +2337,7 @@ function deletePin(spotId){
   var idx=dmapSpots.findIndex(function(s){return s.id===spotId;});
   if(idx>-1)dmapSpots.splice(idx,1);
   renderDmapSpots('all');
+  updatePinCounter();
   showToast('Pin removed 🗑');
 }
 
@@ -2498,6 +2502,7 @@ function submitPin(){
   var countEl=document.getElementById('dmap-pin-count');
   if(countEl)countEl.textContent=dmapSpots.length;
   closeAddPin();
+  updatePinCounter(); // refresh counter after adding pin
   document.getElementById('ap-name').value='';
   document.getElementById('ap-note').value='';
   document.getElementById('ap-tags').value='';
@@ -3067,19 +3072,16 @@ function closeEditProfile(){
 
 /* Sync current profile values into form fields on open */
 function syncInfoFields(){
-  var nameEl=document.querySelector('.prof-name');
-  var rawName=(nameEl.childNodes[0].nodeValue||'').trim();
-  if(rawName)document.getElementById('ep-name').value=rawName;
-  document.getElementById('ep-name-preview').textContent=rawName||'Jake Danvers';
-  document.getElementById('ep-handle-preview').textContent='@JakeDanvers';
-  var bio=document.querySelector('.prof-bio');
-  if(bio)document.getElementById('ep-bio').value=bio.textContent;
-  var handle=document.querySelector('.prof-handle');
-  if(handle){
-    var parts=handle.textContent.split('·');
-    if(parts[0])document.getElementById('ep-handle').value=parts[0].trim().replace('@','');
-    if(parts[1])document.getElementById('ep-location').value=parts[1].trim();
-  }
+  var name = currentUser ? currentUser.name : '';
+  var username = currentUser ? currentUser.username : '';
+  var loc = currentUser ? (currentUser.location||'') : '';
+  var bio = currentUser ? (currentUser.bio||'') : '';
+  if(document.getElementById('ep-name')) document.getElementById('ep-name').value = name;
+  if(document.getElementById('ep-handle')) document.getElementById('ep-handle').value = username;
+  if(document.getElementById('ep-location')) document.getElementById('ep-location').value = loc;
+  if(document.getElementById('ep-bio') && bio) document.getElementById('ep-bio').value = bio;
+  if(document.getElementById('ep-name-preview')) document.getElementById('ep-name-preview').textContent = name || 'Your Name';
+  if(document.getElementById('ep-handle-preview')) document.getElementById('ep-handle-preview').textContent = username ? '@'+username : '@username';
 }
 
 /* ── Tab switching ── */
@@ -3326,16 +3328,50 @@ function applyUserToUI(user){
   var username = user.username || 'angler';
   var loc      = user.location || '';
   var color    = user.avatar_color || '#2d6a4f';
+  var bio      = user.bio || '';
 
-  /* ── Profile page ── */
+  /* ── Avatar ── */
   var avMain = document.getElementById('profile-av-main');
   if(avMain){ avMain.textContent = initials; avMain.style.background = color; }
 
-  var nameEl = document.getElementById('prof-name-text');
-  if(nameEl) nameEl.textContent = name;
-
+  /* ── Name / handle ── */
+  var nameText = document.getElementById('prof-name-text');
+  if(nameText) nameText.textContent = name;
   var handleEl = document.getElementById('prof-handle-el');
   if(handleEl) handleEl.textContent = '@' + username + (loc ? ' · ' + loc : '');
+
+  /* ── Bio ── */
+  var bioEl = document.getElementById('prof-bio-el');
+  if(bioEl){
+    if(bio){ bioEl.textContent = bio; bioEl.style.fontStyle='normal'; bioEl.style.color='var(--text)'; }
+    else { bioEl.textContent = 'Add a bio in Edit Profile...'; bioEl.style.fontStyle='italic'; bioEl.style.color='var(--text-muted)'; }
+  }
+
+  /* ── Trophy room title ── */
+  var trophyTitle = document.getElementById('trophy-room-title');
+  if(trophyTitle) trophyTitle.textContent = '🏆 ' + (name.split(' ')[0]) + "'s Trophy Room";
+
+  /* ── Leaderboard "You" card ── */
+  var lbYourName = document.getElementById('lb-your-name');
+  if(lbYourName) lbYourName.textContent = 'You — ' + name;
+
+  /* ── Update leaderboard data to real user ── */
+  if(window.lbData && lbData.pts && lbData.pts[0]){
+    lbData.pts[0].name = name;
+    lbData.pts[0].init = initials.substring(0,2);
+    lbData.pts[0].bg   = color;
+    lbData.pts[0].city = loc.split(',')[0] || '';
+    lbData.pts[0].state= loc.split(',')[1] ? loc.split(',')[1].trim() : '';
+    lbData.count = [...lbData.pts];
+    lbData.rare  = [...lbData.pts];
+  }
+
+  /* ── Nav badges — 0 until real data arrives ── */
+  updateNavBadge('msg-badge', 0);
+  updateNavBadge('notif-badge', 0);
+
+  /* ── Pin counter ── */
+  updatePinCounter();
 
   /* ── Edit profile pre-fill ── */
   var epName = document.getElementById('ep-name');
@@ -3343,22 +3379,28 @@ function applyUserToUI(user){
   var epHandle = document.getElementById('ep-handle');
   if(epHandle) epHandle.value = username;
   var epLoc = document.getElementById('ep-location');
-  if(epLoc && loc) epLoc.value = loc;
+  if(epLoc) epLoc.value = loc;
   var epPreviewName = document.getElementById('ep-name-preview');
   if(epPreviewName) epPreviewName.textContent = name;
   var epPreviewHandle = document.getElementById('ep-handle-preview');
   if(epPreviewHandle) epPreviewHandle.textContent = '@' + username;
+}
 
-  /* ── Leaderboard "You" card ── */
-  var lbYourName = document.getElementById('lb-your-name');
-  if(lbYourName) lbYourName.textContent = 'You — ' + name;
+function updateNavBadge(id, count){
+  var el = document.getElementById(id);
+  if(!el) return;
+  if(count > 0){ el.textContent = count > 99 ? '99+' : String(count); el.style.display = 'flex'; }
+  else { el.style.display = 'none'; }
+}
 
-  /* ── Nav VIP button tooltip ── */
-  /* ── Feed "post as" user (update user's own posts if any) ── */
-  document.querySelectorAll('.feed-user-name').forEach(function(el){ el.textContent = name; });
-  document.querySelectorAll('.feed-user-av').forEach(function(el){
-    el.textContent = initials; el.style.background = color;
-  });
+function updatePinCounter(){
+  var userSpots = dmapSpots.filter(function(s){ return s.isOwn; });
+  var limit = getUserPinLimit();
+  var counter = document.getElementById('ap-pin-counter');
+  if(!counter) return;
+  counter.textContent = userSpots.length + '/' + limit + ' pins used';
+  var pct = limit > 0 ? userSpots.length / limit : 0;
+  counter.style.color = pct >= 1 ? 'var(--rust)' : pct >= 0.8 ? 'var(--amber)' : 'var(--text-muted)';
 }
 
 function getInitials(name){
@@ -4248,11 +4290,7 @@ openAddPin=function(x,y,lng,lat){
   if(lng!==undefined)window._pendingLng=lng;
   if(lat!==undefined)window._pendingLat=lat;
   pendingPinX=x||'50%'; pendingPinY=y||'50%';
-  // Update pin counter display
-  var userSpots=dmapSpots.filter(function(s){return s.isOwn;});
-  var limit=getUserPinLimit();
-  var counter=document.getElementById('ap-pin-counter');
-  if(counter)counter.textContent=userSpots.length+'/'+limit+' pins used';
+  updatePinCounter(); // always refresh count when modal opens
   document.getElementById('addpin-overlay').classList.add('show');
 };
 </script>
