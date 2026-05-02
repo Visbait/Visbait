@@ -834,7 +834,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--surface2);color:var(--tex
         <div style="position:absolute;inset:0;border-radius:50%;background:var(--moss-light);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;z-index:1">JD</div>
       </div>
       <div style="flex:1">
-        <div style="color:#fff;font-size:14px;font-weight:700" id="lb-your-name">You — Jake Danvers</div>
+        <div style="color:#fff;font-size:14px;font-weight:700" id="lb-your-name">You</div>
         <div style="color:rgba(255,255,255,.7);font-size:12px;margin-top:1px" id="lb-your-stats">2,340 XP · 8 achievements · 2 Rare</div>
       </div>
       <div style="text-align:right">
@@ -1406,16 +1406,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--surface2);color:var(--tex
           <button onclick="closeDmapPopup()" style="background:none;border:none;font-size:16px;cursor:pointer;color:var(--text-muted)">✕</button>
         </div>
         <div style="font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:8px" id="dpp-note"></div>
-        <div style="display:flex;align-items:center;gap:6px">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
           <div style="flex:1;display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-muted)">
-            <div id="dpp-av" style="width:18px;height:18px;border-radius:50%;background:#e8f4fd;color:#1565c0;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700">MB</div>
-            <span id="dpp-author">@MikeBass</span>
+            <div id="dpp-av" style="width:18px;height:18px;border-radius:50%;background:#e8f4fd;color:#1565c0;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700">??</div>
+            <span id="dpp-author">@angler</span>
           </div>
           <div style="display:flex;align-items:center;background:#f0f7ff;border-radius:10px;padding:2px">
             <button id="dpp-like" onclick="dmapReact('like')" style="display:flex;align-items:center;gap:3px;padding:4px 8px;border-radius:8px;border:none;background:none;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;color:#5a6a7a"><span style="font-size:14px">👍</span><span id="dpp-lc">0</span></button>
             <div style="width:1px;height:14px;background:rgba(10,61,92,0.12);align-self:center"></div>
             <button id="dpp-dis" onclick="dmapReact('dis')" style="display:flex;align-items:center;gap:3px;padding:4px 8px;border-radius:8px;border:none;background:none;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;color:#5a6a7a"><span style="font-size:14px">👎</span><span id="dpp-dc">0</span></button>
           </div>
+        </div>
+        <!-- Owner actions — shown only when it's your pin -->
+        <div id="dpp-owner-actions" style="display:none;gap:6px">
+          <button onclick="deletePinFromPopup()" style="flex:1;padding:7px;border-radius:9px;border:1px solid var(--rust);background:#fce4ec;color:var(--rust);font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">🗑 Delete Pin</button>
+          <button onclick="sharePinFromPopup()" style="flex:1;padding:7px;border-radius:9px;border:1px solid var(--border);background:var(--foam);color:var(--water);font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">↗ Share</button>
         </div>
       </div>
     </div>
@@ -1493,16 +1498,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--surface2);color:var(--tex
           <button onclick="switchEpTab('photo')" style="position:absolute;bottom:-2px;right:-2px;width:24px;height:24px;border-radius:50%;background:var(--water);border:2px solid #fff;color:#fff;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center">✏️</button>
         </div>
         <div>
-          <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text)" id="ep-name-preview">Jake Danvers</div>
-          <div style="font-size:13px;color:var(--text-muted)" id="ep-handle-preview">@JakeDanvers</div>
+          <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text)" id="ep-name-preview">Your Name</div>
+          <div style="font-size:13px;color:var(--text-muted)" id="ep-handle-preview">@username</div>
         </div>
       </div>
 
-      <div class="modal-field"><label class="modal-label">Full Name</label><input class="modal-input" id="ep-name" value="Jake Danvers" oninput="document.getElementById('ep-name-preview').textContent=this.value"></div>
+      <div class="modal-field"><label class="modal-label">Full Name</label><input class="modal-input" id="ep-name" value="" placeholder="Your full name" oninput="document.getElementById('ep-name-preview').textContent=this.value||'Your Name'"></div>
       <div class="modal-field"><label class="modal-label">Username</label>
         <div style="position:relative">
           <span style="position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-weight:600">@</span>
-          <input class="modal-input" id="ep-handle" value="JakeDanvers" style="padding-left:28px" oninput="document.getElementById('ep-handle-preview').textContent='@'+this.value">
+          <input class="modal-input" id="ep-handle" value="" placeholder="username" style="padding-left:28px" oninput="document.getElementById('ep-handle-preview').textContent='@'+(this.value||'username')">
         </div>
       </div>
       <div class="modal-field"><label class="modal-label">Bio</label><textarea class="modal-input" style="height:80px;resize:none" id="ep-bio">Bass & walleye chaser 🎣 Weekend tournament angler. 12lb PB largemouth Oct '24. Always early, always on the water.</textarea></div>
@@ -1964,14 +1969,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--surface2);color:var(--tex
   <div class="profile-cover"><div class="profile-av-wrap"><div class="profile-av" id="profile-av-main">JD</div></div><div class="prof-cover-fish">🎣</div></div>
   <div class="profile-info">
     <div class="prof-name" id="prof-name-el">
-      <span id="prof-name-text">Jake Danvers</span>
+      <span id="prof-name-text">Angler</span>
       <div class="prof-ach-badge" onclick="switchProfile('ach')" title="8 Achievements Unlocked">
         <span class="prof-ach-badge-icon">🏆</span>
         <span class="prof-ach-badge-count">8</span>
         <span class="prof-ach-badge-lbl">Achievements</span>
       </div>
     </div>
-    <div class="prof-handle" id="prof-handle-el">@JakeDanvers · Crystal Lake, MN</div>
+    <div class="prof-handle" id="prof-handle-el">@angler</div>
     <div class="prof-bio" id="prof-bio-el" style="color:var(--text-muted);font-style:italic">Add a bio in Edit Profile...</div>
     <div class="prof-badges" id="prof-badges-el"></div>
     <div class="prof-stats">
@@ -2151,7 +2156,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--surface2);color:var(--tex
   <div class="proof-card">
     <div class="proof-media" id="pm-media" style="background:#e8f5e9"><span id="pm-emoji" style="font-size:82px">🎣</span><div class="proof-ach-stamp" id="pm-stamp" style="display:none"><span id="pm-stamp-icon">🏆</span><span id="pm-stamp-lbl">Achievement Verified</span></div><button class="proof-close" onclick="closeProof()">✕</button></div>
     <div class="proof-body">
-      <div class="proof-head"><div class="proof-av">JD</div><div><div class="proof-author">@JakeDanvers</div><div class="proof-time" id="pm-time">Oct 12, 2024</div></div></div>
+      <div class="proof-head"><div class="proof-av" id="proof-av-el">??</div><div><div class="proof-author" id="proof-author-el">@angler</div><div class="proof-time" id="pm-time">Oct 12, 2024</div></div></div>
       <div class="proof-caption" id="pm-cap">Caption here</div>
       <div class="proof-tags" id="pm-tags"></div>
       <div class="proof-ach-banner" id="pm-ach-banner" style="display:none"><div class="pab-icon" id="pab-icon">🎣</div><div><div class="pab-title" id="pab-title">Achievement Unlocked!</div><div class="pab-desc" id="pab-desc">Description</div></div></div>
@@ -2358,22 +2363,41 @@ function spotReact(id,type,btn){
 
 function showDmapPopup(id){
   var s=dmapSpots.find(function(x){return x.id===id;});
+  if(!s)return;
   currentDmapPin=id;
   if(!dmapReactState[id])dmapReactState[id]={liked:false,disliked:false};
   var st=dmapReactState[id];
   document.getElementById('dpp-title').textContent=s.name;
   document.getElementById('dpp-note').textContent=s.note;
-  document.getElementById('dpp-av').textContent=s.av;
-  document.getElementById('dpp-av').style.background=s.bg;
-  document.getElementById('dpp-av').style.color=s.cl;
-  document.getElementById('dpp-author').textContent=s.author;
+  var avEl=document.getElementById('dpp-av');
+  avEl.textContent=s.av||'??';
+  avEl.style.background=s.avColor||s.bg||'#e8f4fd';
+  avEl.style.color=s.cl||'#1565c0';
+  document.getElementById('dpp-author').textContent=s.author||'@angler';
   document.getElementById('dpp-lc').textContent=s.likes+(st.liked?1:0);
   document.getElementById('dpp-dc').textContent=s.dislikes+(st.disliked?1:0);
   document.getElementById('dpp-like').className='dmap-rbtn'+(st.liked?' liked':'');
   document.getElementById('dpp-dis').className='dmap-rbtn'+(st.disliked?' disliked':'');
+  // Show delete/share only for own pins
+  var ownerActions=document.getElementById('dpp-owner-actions');
+  if(ownerActions){
+    var isOwn=s.isOwn||(currentUser&&s.author===('@'+(currentUser.username||'')));
+    ownerActions.style.display=isOwn?'flex':'none';
+  }
   document.getElementById('dmap-popup').classList.add('show');
 }
 function closeDmapPopup(){document.getElementById('dmap-popup').classList.remove('show');currentDmapPin=null;}
+
+function deletePinFromPopup(){
+  if(currentDmapPin===null)return;
+  deletePin(currentDmapPin);
+  closeDmapPopup();
+}
+
+function sharePinFromPopup(){
+  if(currentDmapPin===null)return;
+  sharePin(currentDmapPin);
+}
 function dmapReact(type){
   if(currentDmapPin===null)return;
   var s=dmapSpots.find(function(x){return x.id===currentDmapPin;});
@@ -2452,9 +2476,10 @@ function submitPin(){
   var cm=colorMap[selectedPinColor]||['#e8f4fd','#1565c0'];
   var typeIcons2={bass:'🎣',trout:'🐟',trophy:'🏆',hazard:'⚠️',community:'👥'};
   var isPrivate=document.getElementById('ap-private')&&document.getElementById('ap-private').checked;
-  var userName=currentUser?currentUser.name:'Jake Danvers';
-  var userHandle=currentUser?('@'+currentUser.username):'@JakeDanvers';
-  var userInitials=currentUser?getInitials(currentUser.name):'JD';
+  var userName=currentUser?currentUser.name:'Angler';
+  var userHandle=currentUser?('@'+currentUser.username):'@angler';
+  var userInitials=currentUser?getInitials(currentUser.name||currentUser.username):'??';
+  var userColor=currentUser?(currentUser.avatar_color||'#2d6a4f'):'#2d6a4f';
   var userColor=currentUser?currentUser.avatar_color:'#2d6a4f';
 
   var newSpot={
@@ -2623,12 +2648,22 @@ function makePublic(spotId){
   showToast('Pin is now public — community can see it! 🌍');
 }
 
-/* ── Waze-style: confirm a spot ── */
+/* ── Spot confirmation tracking (Waze-style, 1 per user per spot) ── */
+var confirmedSpots = {};
+
 function confirmSpot(spotId){
-  var spot=dmapSpots.find(function(s){return s.id===spotId;});
-  if(!spot)return;
-  spot.confirmations=(spot.confirmations||0)+1;
-  showToast('Spot confirmed! '+spot.confirmations+' anglers verified this location ✅');
+  var userId = currentUser ? currentUser.id : 'guest';
+  var key = userId + '_' + spotId;
+  if(confirmedSpots[key]){
+    showToast('You already confirmed this spot ✅');
+    return;
+  }
+  var spot = dmapSpots.find(function(s){ return s.id === spotId; });
+  if(!spot) return;
+  confirmedSpots[key] = true;
+  spot.confirmations = (spot.confirmations||0) + 1;
+  renderDmapSpots('all');
+  showToast('Spot confirmed! ' + spot.confirmations + ' angler' + (spot.confirmations===1?'':'s') + ' verified this location ✅');
 }
 
 // Pins are loaded inside initDmap via loadPinsFromSupabase call below
@@ -2677,6 +2712,13 @@ function openProof(idx){
   document.getElementById('pm-stamp').style.display=ha?'flex':'none';
   document.getElementById('pm-ach-banner').style.display=ha?'flex':'none';
   if(ha){document.getElementById('pm-stamp-icon').textContent=p.achIcon;document.getElementById('pab-icon').textContent=p.achIcon;document.getElementById('pab-title').textContent=p.achTitle;document.getElementById('pab-desc').textContent=p.achDesc;}
+  // inject real user into proof modal
+  var avEl=document.getElementById('proof-av-el');
+  var authEl=document.getElementById('proof-author-el');
+  if(currentUser){
+    if(avEl){avEl.textContent=getInitials(currentUser.name||currentUser.username);avEl.style.background=currentUser.avatar_color||'#2d6a4f';}
+    if(authEl)authEl.textContent='@'+(currentUser.username||'angler');
+  }
   document.getElementById('proof-overlay').classList.add('show');
 }
 function closeProof(){document.getElementById('proof-overlay').classList.remove('show');}
@@ -3214,8 +3256,8 @@ function saveAchDisplay(){
 
 /* ══ PROFILE INFO SAVE ══ */
 function saveProfileInfo(){
-  var name=document.getElementById('ep-name').value.trim()||'Jake Danvers';
-  var handle=document.getElementById('ep-handle').value.trim()||'JakeDanvers';
+  var name=document.getElementById('ep-name').value.trim()||currentUser&&currentUser.name||'Angler';
+  var handle=document.getElementById('ep-handle').value.trim()||currentUser&&currentUser.username||'angler';
   var bio=document.getElementById('ep-bio').value.trim();
   var loc=document.getElementById('ep-location').value.trim();
 
@@ -3763,7 +3805,7 @@ function switchLbScope(scope,el){
 /* ══ LEADERBOARD ══ */
 var lbData={
   pts:[
-    {rank:1,name:'Jake Danvers',init:'JD',bg:'#2d6a4f',cl:'#fff',xp:0,count:0,rare:0,status:'',dist:0,state:'PA',city:'Philadelphia',you:true,border:'border-gold'}
+    {rank:1,name:'You',init:'?',bg:'#2d6a4f',cl:'#fff',xp:0,count:0,rare:0,status:'',dist:0,state:'',city:'',you:true,border:'border-gold'}
   ]
 };
 lbData.count=[...lbData.pts];
@@ -3876,14 +3918,14 @@ function postThread(){
   var tags=document.getElementById('thread-tags').value.trim();
   if(!title){showToast('Please add a title for your thread ✏️');return;}
 
-  var authorName=currentUser?currentUser.name:'Jake Danvers';
+  var authorName=currentUser?currentUser.name:'Angler';
   var thread={
     title:title,
     body:body,
     tags:tags,
     category:selectedThreadCat,
     author_name:authorName,
-    author_username:currentUser?currentUser.username:'JakeDanvers',
+    author_username:currentUser?currentUser.username:'angler',
     user_id:currentUser?currentUser.id:null,
     votes:1,
     replies:0,
@@ -4266,7 +4308,11 @@ submitPin=function(){
   var newId=Date.now();
   var note=document.getElementById('ap-note').value.trim();
   var tags=document.getElementById('ap-tags').value.trim();
-  var newSpot={id:newId,name:name,icon:typeIcons2[selectedPinType]||'📍',color:selectedPinColor,bg:cm[0],cl:cm[1],av:'JD',author:'@JakeDanvers',note:note||'No notes added.',tags:tags?tags.split(' ').filter(Boolean):['#'+selectedPinType],type:selectedPinType,time:'Just now',likes:0,dislikes:0,x:pendingPinX,y:pendingPinY,_latLng:{lat:lat,lng:lng}};
+  var userN  = currentUser?currentUser.name:'Angler';
+  var userH  = currentUser?('@'+currentUser.username):'@angler';
+  var userIn = currentUser?getInitials(currentUser.name||currentUser.username):'??';
+  var userC  = currentUser?(currentUser.avatar_color||'#2d6a4f'):'#2d6a4f';
+  var newSpot={id:newId,name:name,icon:typeIcons2[selectedPinType]||'📍',color:selectedPinColor,bg:cm[0],cl:cm[1],av:userIn,avColor:userC,author:userH,authorName:userN,note:note||'No notes added.',tags:tags?tags.split(' ').filter(Boolean):['#'+selectedPinType],type:selectedPinType,time:'Just now',likes:0,dislikes:0,x:pendingPinX,y:pendingPinY,_latLng:{lat:lat,lng:lng},isOwn:true,isPrivate:false,confirmations:0};
   dmapSpots.push(newSpot);dmapReactState[newId]={liked:false,disliked:false};spotCoords.push([lat,lng]);
   if(dmapInst){
     var m1=new google.maps.Marker({position:{lat:lat,lng:lng},map:dmapInst,icon:makePinSvg(newSpot.icon,selectedPinColor),title:name});
