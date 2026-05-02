@@ -2311,6 +2311,10 @@ function openScreen(name){
   if(name==='profile'&&document.getElementById('ptab-ach').classList.contains('active')){
     setTimeout(function(){document.getElementById('xp-bar').style.width='78%';},120);
   }
+  // Side effects — all in one place, no stacking overrides
+  if(name==='feed')   setTimeout(loadFishingNews,300);
+  if(name==='map')    setTimeout(initSmap,80);
+  if(name==='discover')setTimeout(loadThreadsFromSupabase,400);
 }
 
 // ── FEED REACTIONS ──
@@ -2373,10 +2377,14 @@ function postReelComment(){
 }
 
 // ── DISCOVER ──
+// switchDiscover is defined later with full logic (map init + DB loading)
+// This stub is overwritten below — kept for parse order only
 function switchDiscover(t){
   ['threads','market','dmap'].forEach(function(x){
-    document.getElementById('dtab-'+x).classList.toggle('active',x===t);
-    document.getElementById('disc-'+x).style.display=x===t?'block':'none';
+    var dtab=document.getElementById('dtab-'+x);
+    var ddisc=document.getElementById('disc-'+x);
+    if(dtab)dtab.classList.toggle('active',x===t);
+    if(ddisc)ddisc.style.display=x===t?'block':'none';
   });
   if(t==='dmap')renderDmapSpots('all');
 }
@@ -2743,12 +2751,7 @@ function confirmSpot(spotId){
   showToast('Spot confirmed! '+spot.confirmations+' anglers verified this location ✅');
 }
 
-/* ── Load pins on map init ── */
-var _origDoInitDmap=_doInitDmap;
-_doInitDmap=function(){
-  _origDoInitDmap&&_origDoInitDmap();
-  setTimeout(loadPinsFromSupabase,800);
-};
+// Pins are loaded inside initDmap via loadPinsFromSupabase call below
 
 // ── MAP ──
 function showPin(title,icon,note,tags,timing){
@@ -3123,13 +3126,7 @@ function loadListingsFromSupabase(){
   }).catch(function(){});
 }
 
-// Load listings when market tab opens
-var _origSwitchDiscover=switchDiscover;
-switchDiscover=function(t){
-  _origSwitchDiscover(t);
-  if(t==='market')setTimeout(loadListingsFromSupabase,300);
-  if(t==='dmap')setTimeout(initDmap,80);
-};
+// listings load is handled in consolidated switchDiscover above
 </script>
 
 <script>
@@ -4068,13 +4065,6 @@ function filterThreads(el,cat){
   });
 }
 
-// Load threads when Discover tab opens
-var _origOpenScreen=openScreen;
-openScreen=function(name){
-  _origOpenScreen(name);
-  if(name==='discover')setTimeout(loadThreadsFromSupabase,400);
-};
-
 /* ══ LIVE FISHING NEWS ══
    Fetches from multiple fishing news RSS feeds via rss2json.com (free, 10k calls/day)
    Falls back to curated articles if fetch fails.
@@ -4162,14 +4152,7 @@ function renderNewsCards(articles){
   }
 }
 
-// Load news when feed tab opens
-var _origOpenScreen2=openScreen;
-openScreen=function(name){
-  _origOpenScreen2(name);
-  if(name==='feed')setTimeout(loadFishingNews,300);
-};
-
-// Initial load if feed is the default active screen
+// Initial load since feed is the default active screen
 setTimeout(loadFishingNews,800);
 
 function showToast(msg){
@@ -4265,6 +4248,8 @@ function _doInitDmap(){
     window._pendingLng=e.latLng.lng();
     openAddPin('50%','50%');
   });
+  // Load community pins from database
+  setTimeout(loadPinsFromSupabase,600);
 }
 
 function _doInitSmap(){
@@ -4293,10 +4278,17 @@ function _doInitSmap(){
 function initDmap(){if(gmapsReady)_doInitDmap();else dmapQueued=true;}
 function initSmap(){if(gmapsReady)_doInitSmap();else smapQueued=true;}
 
-var _origOpenScreen=openScreen;
-openScreen=function(name){_origOpenScreen(name);if(name==='map')setTimeout(initSmap,80);};
-var _origSwitchDiscover=switchDiscover;
-switchDiscover=function(t){_origSwitchDiscover(t);if(t==='dmap')setTimeout(initDmap,80);};
+// Single consolidated switchDiscover — no stacked overrides
+function switchDiscover(tab){
+  ['threads','market','dmap'].forEach(function(t){
+    var el=document.getElementById('disc-'+t);
+    if(el)el.style.display=t===tab?'block':'none';
+    var btn=document.getElementById('dtab-'+t);
+    if(btn)btn.classList.toggle('active',t===tab);
+  });
+  if(tab==='dmap')setTimeout(initDmap,80);
+  if(tab==='market')setTimeout(loadListingsFromSupabase,300);
+}
 
 submitPin=function(){
   var name=document.getElementById('ap-name').value.trim();
