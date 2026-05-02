@@ -1244,159 +1244,40 @@ body{font-family:'DM Sans',sans-serif;background:var(--surface2);color:var(--tex
 
   <!-- Stories -->
   <div class="stories-row">
-    <div class="story add"><div class="story-ring"><div class="story-inner">+</div></div><div class="story-name">Your story</div></div>
-    <div class="story"><div class="story-ring"><div class="story-inner">🎣</div></div><div class="story-name">Mike_B</div></div>
-    <div class="story"><div class="story-ring"><div class="story-inner">🐟</div></div><div class="story-name">TroutLady</div></div>
-    <div class="story"><div class="story-ring"><div class="story-inner">🏆</div></div><div class="story-name">BigCatch99</div></div>
-    <div class="story"><div class="story-ring"><div class="story-inner">🌊</div></div><div class="story-name">SaltWater</div></div>
-    <div class="story"><div class="story-ring"><div class="story-inner">🦈</div></div><div class="story-name">DeepBlue</div></div>
+    <div class="story add" onclick="triggerStoryUpload()" style="cursor:pointer">
+      <div class="story-ring"><div class="story-inner">+</div></div>
+      <div class="story-name">Your story</div>
+    </div>
+    <!-- Beta testers' stories will appear here dynamically -->
   </div>
+  <input type="file" id="story-file-input" accept="image/*,video/*" style="display:none" onchange="handleStoryUpload(this)">
 
   <div class="live-badge"><div class="live-pulse"></div>Live News</div>
 
-  <!-- POST 1: News -->
-  <div class="post-card">
-    <div class="pc-head"><div class="pc-av" style="background:#fff3e0;font-size:18px">📰</div><div class="pc-meta"><div class="pc-author">VisBait News <span class="post-type-icon post-type-news">NEWS</span></div><div class="pc-time">2 hours ago</div></div></div>
-    <div class="pc-img" style="background:#e8f4fd">🌊</div>
-    <div class="pc-body"><div class="pc-title">Bass season opens early across 3 states — record spawns reported</div><div class="pc-text">Biologists confirm exceptional water temps triggered earlier spawning, with populations up 23% in Lake Michigan tributaries...</div></div>
-    <div class="pc-tags"><span class="pc-tag">#BassFishing</span><span class="pc-tag">#LakeMichigan</span><span class="pc-tag">#SeasonUpdate</span></div>
-    <div class="pc-actions"><div class="react-group"><button class="react-btn" id="like-p1" onclick="toggleReact('p1','like')"><span style="font-size:16px">👍</span><span id="lc-p1">248</span></button><div class="rsep"></div><button class="react-btn" id="dis-p1" onclick="toggleReact('p1','dis')"><span style="font-size:16px">👎</span><span id="dc-p1">14</span></button></div><button class="act-btn"><span style="font-size:16px">💬</span> 43</button><div class="act-sp"></div><button class="act-btn">↗</button></div>
+  <!-- News loads here dynamically from loadFishingNews() -->
+
+  <!-- Empty feed state — shown until real posts exist -->
+  <div id="feed-empty-state" style="text-align:center;padding:48px 24px">
+    <div style="font-size:56px;margin-bottom:12px">🎣</div>
+    <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:8px">The water is calm</div>
+    <div style="font-size:14px;color:var(--text-muted);line-height:1.7;margin-bottom:24px">Be the first to post a catch, tip, or story.<br>Your fellow anglers are waiting.</div>
+    <button onclick="openUploadModal()" style="background:var(--water);color:#fff;border:none;padding:12px 28px;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">📸 Post Your First Catch</button>
   </div>
 
-  <!-- POST 2: Photo catch -->
-  <div class="post-card">
-    <div class="pc-head"><div class="pc-av" style="background:#e8f5e9;color:#2e7d32;font-weight:700">MB</div><div class="pc-meta"><div class="pc-author">MikeBass <span class="post-type-icon post-type-photo">📸 PHOTO</span></div><div class="pc-time">4 hours ago</div></div><span class="pc-badge badge-catch">🐟 Catch</span></div>
-    <div class="pc-img" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9)">🎣</div>
-    <div class="pc-body"><div class="pc-title">12lb largemouth at Crystal Cove! Personal best 🏆</div><div class="pc-text">Couldn't believe it when she hit the topwater lure at 6am. Zara Spook at the lily pad edge. 8-minute fight!</div></div>
-    <div class="pc-tags"><span class="pc-tag">#LargeMouth</span><span class="pc-tag">#PersonalBest</span><span class="pc-tag">#TopWater</span></div>
-    <div class="pc-actions"><div class="react-group"><button class="react-btn liked" id="like-p2" onclick="toggleReact('p2','like')"><span style="font-size:16px">👍</span><span id="lc-p2">127</span></button><div class="rsep"></div><button class="react-btn" id="dis-p2" onclick="toggleReact('p2','dis')"><span style="font-size:16px">👎</span><span id="dc-p2">3</span></button></div><button class="act-btn"><span style="font-size:16px">💬</span> 31</button><div class="act-sp"></div><button class="act-btn">↗</button></div>
-  </div>
-
-  <!-- POST 3: Reel -->
-  <div class="post-card" style="background:linear-gradient(135deg,#0a1628,#0e2a4a);border-radius:18px;margin:0 12px;overflow:hidden">
-    <div class="pc-head" style="padding:12px 13px 8px"><div class="pc-av" style="background:#bc4749;color:#fff;font-weight:700">RD</div><div class="pc-meta"><div class="pc-author" style="color:#fff">ReelDeal <span class="post-type-icon post-type-reel" style="background:rgba(188,71,73,.3);color:#ff8a8a">🎬 REEL</span></div><div class="pc-time" style="color:rgba(255,255,255,.5)">6 hours ago</div></div></div>
-    <div style="height:180px;background:linear-gradient(160deg,#061f2e,#0e3a5c);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer" onclick="openScreen('reels')">
-      <div style="font-size:60px">🐟</div>
-      <div style="position:absolute;inset:0;background:rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center">
-        <div style="width:52px;height:52px;background:rgba(255,255,255,.15);border-radius:50%;backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;font-size:22px">▶️</div>
-      </div>
-      <div style="position:absolute;bottom:8px;left:12px;color:rgba(255,255,255,.7);font-size:11px">0:42</div>
-    </div>
-    <div class="pc-body" style="padding:10px 13px"><div class="pc-title" style="color:#fff">5 trout in 20 minutes — this hole is insane 🔥</div></div>
-    <div class="pc-actions" style="padding:0 13px 12px"><div class="react-group"><button class="react-btn" id="like-p5" onclick="toggleReact('p5','like')" style="background:rgba(255,255,255,.1);color:#fff"><span style="font-size:16px">👍</span><span id="lc-p5" style="color:#fff">342</span></button><div class="rsep" style="background:rgba(255,255,255,.2)"></div><button class="react-btn" id="dis-p5" onclick="toggleReact('p5','dis')" style="background:rgba(255,255,255,.1);color:#fff"><span style="font-size:16px">👎</span><span id="dc-p5" style="color:#fff">8</span></button></div><button class="act-btn" style="color:rgba(255,255,255,.7)"><span style="font-size:16px">💬</span> 67</button><div class="act-sp"></div><button class="act-btn" style="color:rgba(255,255,255,.7)">↗</button></div>
-  </div>
-
-  <!-- POST 4: Tip -->
-  <div class="post-card">
-    <div class="pc-head"><div class="pc-av" style="background:#e3f2fd;color:#1565c0;font-weight:700">SK</div><div class="pc-meta"><div class="pc-author">SkinnyKnot <span class="post-type-icon post-type-tip">💡 TIP</span></div><div class="pc-time">Yesterday</div></div><span class="pc-badge badge-tip">💡 Tip</span></div>
-    <div class="pc-body"><div class="pc-title">The rig change that doubled my walleye catch rate</div><div class="pc-text">Switched from bottom bouncer to slip-float rig at 12ft depth. Went from 2 fish to 11 in the same spot. Water was clearer so they were holding higher...</div></div>
-    <div class="pc-tags"><span class="pc-tag">#Walleye</span><span class="pc-tag">#RigTips</span><span class="pc-tag">#Technique</span></div>
-    <div class="pc-actions"><div class="react-group"><button class="react-btn" id="like-p3" onclick="toggleReact('p3','like')"><span style="font-size:16px">👍</span><span id="lc-p3">89</span></button><div class="rsep"></div><button class="react-btn" id="dis-p3" onclick="toggleReact('p3','dis')"><span style="font-size:16px">👎</span><span id="dc-p3">7</span></button></div><button class="act-btn"><span style="font-size:16px">💬</span> 22</button><div class="act-sp"></div><button class="act-btn">↗</button></div>
-  </div>
-
-  <!-- POST 5: Achievement milestone -->
-  <div class="post-card" style="border:2px solid var(--amber)">
-    <div class="pc-head"><div class="pc-av" style="background:linear-gradient(135deg,#f0a500,#fde68a);color:#1a1a2e;font-weight:700;font-size:16px">🏆</div><div class="pc-meta"><div class="pc-author">TroutLady99 <span class="post-type-icon" style="background:#fff3e0;color:#e65100">🏅 ACH</span></div><div class="pc-time">2 days ago</div></div><span class="pc-badge" style="background:var(--amber);color:#1a1a2e">🏅 Achievement</span></div>
-    <div style="background:linear-gradient(135deg,#fff8e1,#fff3c4);padding:16px 13px;display:flex;align-items:center;gap:13px">
-      <div style="font-size:40px">🦁</div>
-      <div><div style="font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text)">50 lb Club Unlocked!</div><div style="font-size:12px;color:var(--text-muted);margin-top:3px">🥇 Gold Achievement · RARE · #4 globally</div></div>
-    </div>
-    <div class="pc-body"><div class="pc-text">Just weighed in a 52lb flathead at the Ohio River. After 6 years of trying. I'm shaking. 🙏</div></div>
-    <div class="pc-actions"><div class="react-group"><button class="react-btn" id="like-p6" onclick="toggleReact('p6','like')"><span style="font-size:16px">👍</span><span id="lc-p6">891</span></button><div class="rsep"></div><button class="react-btn" id="dis-p6" onclick="toggleReact('p6','dis')"><span style="font-size:16px">👎</span><span id="dc-p6">2</span></button></div><button class="act-btn"><span style="font-size:16px">💬</span> 203</button><div class="act-sp"></div><button class="act-btn">↗</button></div>
-  </div>
-
-  <!-- POST 6: Gear for sale teaser -->
-  <div class="post-card">
-    <div class="pc-head"><div class="pc-av" style="background:#f3e5f5;color:#6a1b9a;font-weight:700">WW</div><div class="pc-meta"><div class="pc-author">WaderWade <span class="post-type-icon" style="background:#f3e5f5;color:#6a1b9a">🛒 MARKET</span></div><div class="pc-time">3 days ago</div></div></div>
-    <div class="pc-body"><div class="pc-title">Selling my Shimano Stradic collection — upgrading to Stella</div><div class="pc-text">3x Stradic 4000s, barely used, all with original boxes. Check the Tackle Shop listing for photos and individual pricing.</div></div>
-    <div class="pc-tags"><span class="pc-tag">#Shimano</span><span class="pc-tag">#ForSale</span><span class="pc-tag">#Reels</span></div>
-    <div style="margin:0 13px 10px"><button onclick="switchDiscover('market')" style="width:100%;padding:9px;border-radius:10px;background:var(--water);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">View Listing in Tackle Shop →</button></div>
-    <div class="pc-actions"><div class="react-group"><button class="react-btn" id="like-p7" onclick="toggleReact('p7','like')"><span style="font-size:16px">👍</span><span id="lc-p7">44</span></button><div class="rsep"></div><button class="react-btn" id="dis-p7" onclick="toggleReact('p7','dis')"><span style="font-size:16px">👎</span><span id="dc-p7">1</span></button></div><button class="act-btn"><span style="font-size:16px">💬</span> 12</button><div class="act-sp"></div><button class="act-btn">↗</button></div>
-  </div>
-
+  <div id="feed-posts-list"></div>
   <div style="height:16px"></div>
 </div>
 
 <!-- ════ REELS ════ -->
 <div id="s-reels" class="screen">
   <div class="reels-wrap" id="reels-wrap">
-
-    <div class="reel-page" style="background:linear-gradient(160deg,#061f2e,#0a3d5c)">
-      <div class="reel-bg-layer">🎣</div><div class="reel-grad"></div>
-      <div class="reel-prog"><div class="rp-seg"><div class="rp-fill" style="width:72%"></div></div><div class="rp-seg"><div class="rp-fill" style="width:0%"></div></div><div class="rp-seg"></div></div>
-      <div class="reel-type-pill">🎬 Reel</div>
-      <div class="reel-center"><div class="reel-emoji-big">🎣</div></div>
-      <div class="reel-side">
-        <button class="reel-side-btn" onclick="reelLike(this,0)"><span class="rsi">🤍</span><span class="rsc">2.4k</span></button>
-        <button class="reel-side-btn" onclick="reelDislike(this,0)"><span class="rsi">👎</span><span class="rsc">38</span></button>
-        <button class="reel-side-btn" onclick="openReelComments(0)"><span class="rsi">💬</span><span class="rsc">89</span></button>
-        <button class="reel-side-btn"><span class="rsi">↗</span><span class="rsc">Share</span></button>
-      </div>
-      <div class="reel-bottom">
-        <div class="reel-author-row"><div class="reel-av" style="background:#1a85c4;color:#fff">MB</div><span class="reel-uname">@MikeBass</span><button class="reel-follow-btn" onclick="toggleFollow(this)">+ Follow</button></div>
-        <div class="reel-caption">12lb largemouth on topwater — absolute monster fight at Crystal Cove! 🎣</div>
-        <div class="reel-hashtags">#BassFishing #TopWater #PersonalBest</div>
-        <div class="reel-location">📍 Crystal Cove, MN · 6:02 AM</div>
-      </div>
+    <!-- Empty state — beta testers will fill this -->
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:40px 24px;text-align:center;background:linear-gradient(160deg,#061f2e,#0a3d5c)">
+      <div style="font-size:64px;margin-bottom:16px">🎬</div>
+      <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:#fff;margin-bottom:10px">No reels yet</div>
+      <div style="font-size:14px;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:28px">Be the first to post a CastReel.<br>Show the community your best catch.</div>
+      <button onclick="openUploadModal()" style="background:var(--amber);color:var(--navy,#0a3d5c);border:none;padding:13px 28px;border-radius:14px;font-size:15px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif">🎬 Post a Reel</button>
     </div>
-
-    <div class="reel-page" style="background:linear-gradient(160deg,#0d2d1e,#2d6a4f)">
-      <div class="reel-bg-layer">🐟</div><div class="reel-grad"></div>
-      <div class="reel-prog"><div class="rp-seg"><div class="rp-fill" style="width:100%"></div></div><div class="rp-seg"><div class="rp-fill" style="width:44%"></div></div><div class="rp-seg"></div></div>
-      <div class="reel-type-pill">📸 Photo</div>
-      <div class="reel-center"><div class="reel-emoji-big" style="animation-delay:.5s">🐟</div></div>
-      <div class="reel-side">
-        <button class="reel-side-btn" onclick="reelLike(this,1)"><span class="rsi">🤍</span><span class="rsc">1.8k</span></button>
-        <button class="reel-side-btn" onclick="reelDislike(this,1)"><span class="rsi">👎</span><span class="rsc">12</span></button>
-        <button class="reel-side-btn" onclick="openReelComments(1)"><span class="rsi">💬</span><span class="rsc">54</span></button>
-        <button class="reel-side-btn"><span class="rsi">↗</span><span class="rsc">Share</span></button>
-      </div>
-      <div class="reel-bottom">
-        <div class="reel-author-row"><div class="reel-av" style="background:#52b788;color:#fff">TL</div><span class="reel-uname">@TroutLady99</span><button class="reel-follow-btn" onclick="toggleFollow(this)">+ Follow</button></div>
-        <div class="reel-caption">Fly fishing the Yellowstone at golden hour — nothing beats this 🌅</div>
-        <div class="reel-hashtags">#FlyFishing #Yellowstone #TroutSeason</div>
-        <div class="reel-location">📍 Yellowstone River, MT · Sunrise</div>
-      </div>
-    </div>
-
-    <div class="reel-page" style="background:linear-gradient(160deg,#2a0808,#bc4749)">
-      <div class="reel-bg-layer">🦈</div><div class="reel-grad"></div>
-      <div class="reel-prog"><div class="rp-seg"><div class="rp-fill" style="width:100%"></div></div><div class="rp-seg"><div class="rp-fill" style="width:100%"></div></div><div class="rp-seg"><div class="rp-fill" style="width:22%"></div></div></div>
-      <div class="reel-type-pill">🎬 Video</div>
-      <div class="reel-center"><div class="reel-emoji-big" style="animation-delay:1s">🦈</div></div>
-      <div class="reel-side">
-        <button class="reel-side-btn" onclick="reelLike(this,2)"><span class="rsi">🤍</span><span class="rsc">5.1k</span></button>
-        <button class="reel-side-btn" onclick="reelDislike(this,2)"><span class="rsi">👎</span><span class="rsc">74</span></button>
-        <button class="reel-side-btn" onclick="openReelComments(2)"><span class="rsi">💬</span><span class="rsc">203</span></button>
-        <button class="reel-side-btn"><span class="rsi">↗</span><span class="rsc">Share</span></button>
-      </div>
-      <div class="reel-bottom">
-        <div class="reel-author-row"><div class="reel-av" style="background:#e9c46a;color:#1a1a2e">DB</div><span class="reel-uname">@DeepBlue</span><button class="reel-follow-btn" onclick="toggleFollow(this)">+ Follow</button></div>
-        <div class="reel-caption">Deep sea monster — 3 hour battle 40 miles offshore! 😤🌊</div>
-        <div class="reel-hashtags">#DeepSea #BigGame #OffshoreMonster</div>
-        <div class="reel-location">📍 Gulf of Mexico · 40 miles out</div>
-      </div>
-    </div>
-
-    <div class="reel-page" style="background:linear-gradient(160deg,#100a2e,#533ab7)">
-      <div class="reel-bg-layer">🌊</div><div class="reel-grad"></div>
-      <div class="reel-prog"><div class="rp-seg"><div class="rp-fill" style="width:100%"></div></div><div class="rp-seg"><div class="rp-fill" style="width:60%"></div></div><div class="rp-seg"></div></div>
-      <div class="reel-type-pill">🎬 Reel</div>
-      <div class="reel-center"><div class="reel-emoji-big" style="animation-delay:.3s">🌊</div></div>
-      <div class="reel-side">
-        <button class="reel-side-btn" onclick="reelLike(this,3)"><span class="rsi">🤍</span><span class="rsc">990</span></button>
-        <button class="reel-side-btn" onclick="reelDislike(this,3)"><span class="rsi">👎</span><span class="rsc">21</span></button>
-        <button class="reel-side-btn" onclick="openReelComments(3)"><span class="rsi">💬</span><span class="rsc">31</span></button>
-        <button class="reel-side-btn"><span class="rsi">↗</span><span class="rsc">Share</span></button>
-      </div>
-      <div class="reel-bottom">
-        <div class="reel-author-row"><div class="reel-av" style="background:#9f77dd;color:#fff">SW</div><span class="reel-uname">@SaltWater</span><button class="reel-follow-btn" onclick="toggleFollow(this)">+ Follow</button></div>
-        <div class="reel-caption">Night kayak fishing in the bay — eerie and incredible 🌙🎣</div>
-        <div class="reel-hashtags">#NightFishing #KayakLife #BayFishing</div>
-        <div class="reel-location">📍 Chesapeake Bay · 11:30 PM</div>
-      </div>
-    </div>
-
   </div>
 </div>
 
@@ -1422,22 +1303,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--surface2);color:var(--tex
     </button>
 
     <div id="threads-list">
-      <!-- Static seed threads shown before DB loads -->
-      <div class="thread-card" data-cat="catch">
-        <div class="tc-img">🐠</div>
-        <div class="tc-top"><div class="tc-title">Biggest crappie I've ever seen — Lake Okeechobee at dawn</div><div class="vote-col"><button class="vote-btn voted" onclick="voteUp(this)">▲</button><span class="vote-count">234</span><button class="vote-btn" onclick="voteDn(this)">▼</button></div></div>
-        <div class="tc-preview">Hit this 3.2lb slab on a 1/16 jig tipped with a waxworm. The shallows were on fire at dawn!</div>
-        <div class="tc-meta"><span class="tc-stat">💬 87</span>&nbsp;&nbsp;<span class="tc-stat">👁️ 1.4k</span>&nbsp;&nbsp;<span class="tc-stat">🕐 3h ago</span></div>
-      </div>
-      <div class="thread-card" data-cat="question">
-        <div class="tc-top"><div class="tc-title">Best time to fish for stripers in late October?</div><div class="vote-col"><button class="vote-btn" onclick="voteUp(this)">▲</button><span class="vote-count">156</span><button class="vote-btn" onclick="voteDn(this)">▼</button></div></div>
-        <div class="tc-preview">Planning a trip to Chesapeake Bay. Water temps around 58°F. Any locals have intel on bite windows?</div>
-        <div class="tc-meta"><span class="tc-stat">💬 43</span>&nbsp;&nbsp;<span class="tc-stat">👁️ 890</span>&nbsp;&nbsp;<span class="tc-stat">🕐 6h ago</span></div>
-      </div>
-      <div class="thread-card" data-cat="tournament">
-        <div class="tc-top"><div class="tc-title">Local regulations changed — what you need to know for 2025</div><div class="vote-col"><button class="vote-btn voted" onclick="voteUp(this)">▲</button><span class="vote-count">412</span><button class="vote-btn" onclick="voteDn(this)">▼</button></div></div>
-        <div class="tc-preview">New slot limits on walleye and perch effective Jan 1st. Walleye: 15–21" protected slot. Perch min raised to 9"...</div>
-        <div class="tc-meta"><span class="tc-stat">💬 119</span>&nbsp;&nbsp;<span class="tc-stat">👁️ 5.2k</span>&nbsp;&nbsp;<span class="tc-stat">🕐 1d ago</span></div>
+      <!-- Empty state — real threads load from Supabase -->
+      <div id="threads-empty-state" style="text-align:center;padding:40px 24px">
+        <div style="font-size:48px;margin-bottom:12px">🧵</div>
+        <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px">No threads yet</div>
+        <div style="font-size:14px;color:var(--text-muted);line-height:1.7">Start the first conversation.<br>Share a catch, ask a question, or post a tip.</div>
       </div>
     </div>
     <div style="height:16px"></div>
@@ -1497,14 +1367,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--surface2);color:var(--tex
     </div>
 
     <div class="mkt-grid" id="mkt-grid">
-      <div class="mkt-item" data-cat="lures" data-dist="3" data-price="145" data-listed="8"><div class="mkt-img" style="background:#fff8e1">🪝</div><div class="mkt-body"><div class="mkt-name">Shimano Stradic 4000</div><div class="mkt-seller">by ReelDeal · 3 mi away</div><div class="mkt-bottom"><div class="mkt-price">$145</div><span class="mkt-badge mbadge-hot">🔥 Hot</span></div></div></div>
-      <div class="mkt-item" data-cat="rods" data-dist="8" data-price="89" data-listed="5"><div class="mkt-img" style="background:#e8f5e9">🎣</div><div class="mkt-body"><div class="mkt-name">St Croix Triumph 7'</div><div class="mkt-seller">by CastPro · 8 mi away</div><div class="mkt-bottom"><div class="mkt-price">$89</div><span class="mkt-badge mbadge-new">✨ New</span></div></div></div>
-      <div class="mkt-item" data-cat="bulk" data-dist="2" data-price="22" data-listed="3"><div class="mkt-img" style="background:#e3f2fd">🐛</div><div class="mkt-body"><div class="mkt-name">Bulk Soft Plastics 200pc</div><div class="mkt-seller">by WormGuy · 2 mi away</div><div class="mkt-bottom"><div class="mkt-price">$22</div></div></div></div>
-      <div class="mkt-item" data-cat="boats" data-dist="15" data-price="12500" data-listed="12"><div class="mkt-img" style="background:#fce4ec">🚤</div><div class="mkt-body"><div class="mkt-name">2019 Tracker Pro 170</div><div class="mkt-seller">by LakeRat · 15 mi away</div><div class="mkt-bottom"><div class="mkt-price">$12,500</div><span class="mkt-badge mbadge-hot">🔥 Hot</span></div></div></div>
-      <div class="mkt-item" data-cat="boats" data-dist="32" data-price="3400" data-listed="20"><div class="mkt-img" style="background:#e8f4fd">⛵</div><div class="mkt-body"><div class="mkt-name">Mercury 60HP Outboard</div><div class="mkt-seller">by MercuryMarine · 32 mi away</div><div class="mkt-bottom"><div class="mkt-price">$3,400</div><span class="mkt-badge mbadge-ad">📢 Ad</span></div></div></div>
-      <div class="mkt-item" data-cat="bulk" data-dist="4" data-price="65" data-listed="6"><div class="mkt-img" style="background:#f3e5f5">🧊</div><div class="mkt-body"><div class="mkt-name">RTIC 45qt Cooler</div><div class="mkt-seller">by NorthAngler · 4 mi away</div><div class="mkt-bottom"><div class="mkt-price">$65</div></div></div></div>
-      <div class="mkt-item" data-cat="lures" data-dist="1" data-price="0" data-listed="1"><div class="mkt-img" style="background:#e8f5e9">🥅</div><div class="mkt-body"><div class="mkt-name">Frabill Conservation Net</div><div class="mkt-seller">by LandEmRight · 1 mi away</div><div class="mkt-bottom"><div class="mkt-price" style="color:var(--rust);font-size:13px">FREE</div></div></div></div>
-      <div class="mkt-item" data-cat="boats" data-dist="60" data-price="28900" data-listed="30"><div class="mkt-img" style="background:#fff3e0">🛥️</div><div class="mkt-body"><div class="mkt-name">Lund 1875 Impact Sport</div><div class="mkt-seller">by FishNation · 60 mi away</div><div class="mkt-bottom"><div class="mkt-price">$28,900</div><span class="mkt-badge mbadge-new">✨ New</span></div></div></div>
+      <!-- Empty state — real listings load from Supabase -->
+      <div id="mkt-empty-state" style="grid-column:1/-1;text-align:center;padding:40px 16px">
+        <div style="font-size:48px;margin-bottom:12px">🛒</div>
+        <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px">The Tackle Shop is empty</div>
+        <div style="font-size:14px;color:var(--text-muted);line-height:1.7;margin-bottom:20px">Be the first to list gear.<br>Other anglers are ready to buy.</div>
+        <button onclick="openCreateListing()" style="background:var(--water);color:#fff;border:none;padding:11px 24px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">📦 List Something</button>
+      </div>
     </div>
     <div style="height:16px"></div>
   </div>
@@ -2105,7 +1974,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--surface2);color:var(--tex
     <div class="prof-bio" id="prof-bio-el">Bass & walleye chaser 🎣 Weekend tournament angler. 12lb PB largemouth Oct '24. Always early, always on the water.</div>
     <div class="prof-badges"><div class="prof-badge">🏆 Tournament Angler</div><div class="prof-badge">🐟 Bass Specialist</div><div class="prof-badge">📍 Top Contributor</div></div>
     <div class="prof-stats"><div class="prof-stat"><div class="prof-stat-val">847</div><div class="prof-stat-lbl">Posts</div></div><div class="prof-stat"><div class="prof-stat-val">3.2k</div><div class="prof-stat-lbl">Followers</div></div><div class="prof-stat"><div class="prof-stat-val">412</div><div class="prof-stat-lbl">Following</div></div><div class="prof-stat"><div class="prof-stat-val">24</div><div class="prof-stat-lbl">Catches</div></div></div>
-    <div class="prof-actions"><button class="prof-edit-btn" onclick="openEditProfile()">✏️ Edit Profile</button><button class="prof-share-btn">↗</button></div>
+    <div class="prof-actions">
+      <button class="prof-edit-btn" onclick="openEditProfile()">✏️ Edit Profile</button>
+      <button class="prof-share-btn" onclick="sharePin(0)" title="Share Profile">↗</button>
+      <button onclick="signOut()" style="padding:8px 14px;border-radius:20px;border:1.5px solid var(--rust);background:none;color:var(--rust);font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s" title="Sign Out">Sign Out</button>
+    </div>
   </div>
   <div class="prof-tabs">
     <button class="ptab active" id="ptab-posts" onclick="switchProfile('posts')">📷 Posts</button>
@@ -2211,16 +2084,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--surface2);color:var(--tex
       <button class="msg-tab" id="mtab-groups" onclick="switchMsgTab('groups')">Groups</button>
     </div>
     <div id="ml-direct" class="dm-list">
-      <div class="dm-item" onclick="openChat('TroutLady99','TL','#e8f4fd','#1565c0',false,[])"><div class="dm-av" style="background:#e8f4fd;color:#1565c0">TL<div class="online-dot"></div></div><div class="dm-info"><div class="dm-name">TroutLady99</div><div class="dm-preview">That spot near the beaver dam is gold 🔥</div></div><div class="dm-right"><div class="dm-time">2m</div><div class="unread-dot">3</div></div></div>
-      <div class="dm-item" onclick="openChat('BigCatch99','BC','#fff3e0','#e65100',false,[])"><div class="dm-av" style="background:#fff3e0;color:#e65100">BC</div><div class="dm-info"><div class="dm-name">BigCatch99</div><div class="dm-preview">What rod do you use for that presentation?</div></div><div class="dm-right"><div class="dm-time">1h</div></div></div>
-      <div class="dm-item" onclick="openChat('ReelDeal','RD','#f3e5f5','#6a1b9a',false,[])"><div class="dm-av" style="background:#f3e5f5;color:#6a1b9a">RD<div class="online-dot"></div></div><div class="dm-info"><div class="dm-name">ReelDeal</div><div class="dm-preview">I'll sell you the Penn Senator for $180</div></div><div class="dm-right"><div class="dm-time">3h</div><div class="unread-dot">1</div></div></div>
-      <div class="dm-item" onclick="openChat('LakeFisher','LF','#e8f5e9','#2e7d32',false,[])"><div class="dm-av" style="background:#e8f5e9;color:#2e7d32">LF</div><div class="dm-info"><div class="dm-name">LakeFisher</div><div class="dm-preview">Congrats on the bass! Insane catch 🎣</div></div><div class="dm-right"><div class="dm-time">Yesterday</div></div></div>
+      <div style="text-align:center;padding:40px 20px">
+        <div style="font-size:44px;margin-bottom:10px">💬</div>
+        <div style="font-weight:700;font-size:15px;color:var(--text);margin-bottom:6px">No messages yet</div>
+        <div style="font-size:13px;color:var(--text-muted)">When anglers message you,<br>they'll appear here.</div>
+      </div>
     </div>
     <div id="ml-groups" class="dm-list" style="display:none">
-      <div class="dm-item" onclick="openChat('Bass Crew 🎣','🎣','#e8f4fd','#1565c0',true,['TroutLady99','BigCatch99'])"><div class="dm-av-group" style="background:#e8f4fd">🎣</div><div class="dm-info"><div class="dm-name">Bass Crew 🎣</div><div class="dm-preview">BigCatch99: Anyone hitting the lake this weekend?</div></div><div class="dm-right"><div class="dm-time">30m</div><div class="unread-dot">5</div></div></div>
-      <div class="dm-item" onclick="openChat('Tournament Squad 🏆','🏆','#fff8e1','#f57c00',true,['WaderWade','TroutLady99'])"><div class="dm-av-group" style="background:#fff8e1">🏆</div><div class="dm-info"><div class="dm-name">Tournament Squad 🏆</div><div class="dm-preview">WaderWade: Saturday 6am sharp!</div></div><div class="dm-right"><div class="dm-time">2h</div></div></div>
-      <div class="dm-item" onclick="openChat('Fly Fishing Fam 🪰','🪰','#e8f5e9','#2e7d32',true,['SkinnyKnot','DeepBlue'])"><div class="dm-av-group" style="background:#e8f5e9">🪰</div><div class="dm-info"><div class="dm-name">Fly Fishing Fam 🪰</div><div class="dm-preview">SkinnyKnot: New hatch on the Yellowstone 🔥</div></div><div class="dm-right"><div class="dm-time">Yesterday</div></div></div>
-      <div style="padding:14px;text-align:center"><button onclick="alert('Group creator coming soon!')" style="background:var(--water);color:#fff;border:none;padding:10px 22px;border-radius:20px;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer">👥 Create New Group</button></div>
+      <div style="text-align:center;padding:40px 20px">
+        <div style="font-size:44px;margin-bottom:10px">👥</div>
+        <div style="font-weight:700;font-size:15px;color:var(--text);margin-bottom:6px">No groups yet</div>
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Create a group to fish together.</div>
+        <button onclick="showToast('Group creator coming soon! 👥')" style="background:var(--water);color:#fff;border:none;padding:10px 22px;border-radius:20px;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer">👥 Create New Group</button>
+      </div>
     </div>
     <div id="chat-pane" class="chat-pane">
       <div class="chat-topbar">
@@ -2253,7 +2129,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--surface2);color:var(--tex
       <div class="ptype-btn" id="ptype-reel" onclick="pickType('reel')"><div class="ptype-icon">🎬</div><div class="ptype-label">Reel / Video</div></div>
       <div class="ptype-btn" id="ptype-story" onclick="pickType('story')"><div class="ptype-icon">⚡</div><div class="ptype-label">Story</div></div>
     </div>
-    <div class="upload-zone" onclick="alert('Camera / file picker would open here!')"><div class="uz-icon" id="uz-icon">📷</div><div class="uz-text" id="uz-text">Tap to add photo</div><div class="uz-hint" id="uz-hint">JPG, PNG or HEIC</div></div>
+    <div class="upload-zone" onclick="document.getElementById('post-file-input').click()" style="cursor:pointer">
+      <input type="file" id="post-file-input" accept="image/*,video/*" style="display:none" onchange="handlePostFileSelect(this)">
+      <div class="uz-icon" id="uz-icon">📷</div>
+      <div class="uz-text" id="uz-text">Tap to choose a photo or video</div>
+      <div class="uz-hint" id="uz-hint">JPG, PNG, MP4, MOV — from your camera roll or files</div>
+    </div>
     <div class="modal-field"><label class="modal-label">Caption</label><textarea class="modal-input modal-textarea" placeholder="Tell the story behind this catch..."></textarea></div>
     <div class="modal-field"><label class="modal-label">Tags</label><input class="modal-input" type="text" placeholder="#Bass #TopWater #MorningBite"></div>
     <div class="modal-field"><label class="modal-label">Location</label><input class="modal-input" type="text" placeholder="e.g. Crystal Cove, MN"></div>
@@ -2392,13 +2273,7 @@ function voteUp(btn){btn.classList.toggle('voted');var c=btn.parentElement.query
 function voteDn(btn){btn.classList.toggle('voted');var c=btn.parentElement.querySelector('.vote-count');c.textContent=parseInt(c.textContent)+(btn.classList.contains('voted')?-1:1);}
 
 // ── DISCOVER MAP ──
-var dmapSpots=[
-  {id:0,name:'Crystal Cove Bass Hole',icon:'🎣',color:'dp-blue',bg:'#e8f4fd',cl:'#1565c0',av:'MB',author:'@MikeBass',note:'Deep bass spot under the willow overhang. Best at dawn on topwater. 12lb largemouth caught here Oct 12!',tags:['#Bass','#TopWater','#Dawn'],type:'bass',time:'2h ago',likes:42,dislikes:3,x:'21%',y:'44%'},
-  {id:1,name:'Trout Run Creek Inlet',icon:'🐟',color:'dp-amber',bg:'#fff3e0',cl:'#e65100',av:'TL',author:'@TroutLady99',note:'Steady trout action at this riffle section. Waders required. Size 14 elk hair caddis or pheasant tails work best.',tags:['#Trout','#FlyCasting','#Riffle'],type:'trout',time:'5h ago',likes:28,dislikes:1,x:'54%',y:'28%'},
-  {id:2,name:'Beaver Dam Walleye Flat',icon:'🏆',color:'dp-green',bg:'#e8f5e9',cl:'#2e7d32',av:'BC',author:'@BigCatch99',note:'Evening walleye gold mine. Slip float at 12ft. Current seam along the dam edge holds fish all season long.',tags:['#Walleye','#Evening','#SlipFloat'],type:'trophy',time:'1d ago',likes:67,dislikes:4,x:'71%',y:'63%'},
-  {id:3,name:'Catfish Hole — WARNING',icon:'⚠️',color:'dp-rust',bg:'#fce4ec',cl:'#880e4f',av:'WW',author:'@WaderWade',note:'Private land on east bank — fish from west shore only. Massive channel cats here. Use cut bait on bottom rig.',tags:['#Catfish','#NightFishing','#Warning'],type:'hazard',time:'3d ago',likes:19,dislikes:12,x:'37%',y:'70%'},
-  {id:4,name:'North Shore Crappie Flat',icon:'🐠',color:'dp-purple',bg:'#f3e5f5',cl:'#6a1b9a',av:'SK',author:'@SkinnyKnot',note:'Shallow crappie action all spring. Work 1/16oz jigs tipped with wax worms along the weed edge at 4–6ft depth.',tags:['#Crappie','#Jigs','#Spring'],type:'community',time:'4h ago',likes:33,dislikes:0,x:'62%',y:'48%'}
-];
+var dmapSpots=[]; // Pins load from Supabase — beta testers will add real pins
 var dmapReactState={};
 var currentDmapPin=null;
 var selectedPinColor='dp-blue';
@@ -3501,12 +3376,14 @@ function saveSession(user){
 
 /* ── Sign out ── */
 function signOut(){
-  currentUser = null;
-  try{ localStorage.removeItem('vb_user'); }catch(e){}
+  if(!confirm('Sign out of VisBait?'))return;
+  currentUser=null;
+  try{localStorage.removeItem('vb_user');}catch(e){}
   showToast('Signed out. See you on the water! 🎣');
   setTimeout(function(){
-    document.getElementById('loc-overlay').classList.remove('hidden');
-  }, 600);
+    var overlay=document.getElementById('loc-overlay');
+    if(overlay)overlay.classList.remove('hidden');
+  },600);
 }
 
 /* ══ LOGIN MODAL ══ */
@@ -3844,20 +3721,11 @@ function switchLbScope(scope,el){
 /* ══ LEADERBOARD ══ */
 var lbData={
   pts:[
-    {rank:1,name:'BigCatch99',init:'BC',bg:'#fff3e0',cl:'#e65100',xp:4820,count:12,rare:4,status:'🏆',dist:120,state:'TX',city:'Austin'},
-    {rank:2,name:'TroutLady99',init:'TL',bg:'#e8f4fd',cl:'#1565c0',xp:4210,count:11,rare:3,status:'🎯',dist:45,state:'PA',city:'Pittsburgh'},
-    {rank:3,name:'DeepBlue',init:'DB',bg:'#0a3d5c',cl:'#fff',xp:3980,count:10,rare:5,status:'🏆',dist:200,state:'FL',city:'Tampa'},
-    {rank:4,name:'ReelDeal',init:'RD',bg:'#f3e5f5',cl:'#6a1b9a',xp:3540,count:9,rare:2,status:'',dist:8,state:'PA',city:'Philadelphia'},
-    {rank:5,name:'WaderWade',init:'WW',bg:'#fce4ec',cl:'#880e4f',xp:3100,count:8,rare:3,status:'🎯',dist:15,state:'PA',city:'Philadelphia'},
-    {rank:6,name:'SkinnyKnot',init:'SK',bg:'#e3f2fd',cl:'#1565c0',xp:2880,count:8,rare:1,status:'',dist:320,state:'MN',city:'Crystal Lake'},
-    {rank:7,name:'Jake Danvers',init:'JD',bg:'#2d6a4f',cl:'#fff',xp:2340,count:8,rare:2,status:'',dist:0,state:'PA',city:'Philadelphia',you:true,border:'border-gold'},
-    {rank:8,name:'SaltWater',init:'SW',bg:'#533ab7',cl:'#fff',xp:2100,count:7,rare:1,status:'',dist:180,state:'FL',city:'Miami'},
-    {rank:9,name:'LakeFisher',init:'LF',bg:'#e8f5e9',cl:'#2e7d32',xp:1870,count:6,rare:0,status:'',dist:12,state:'PA',city:'Philadelphia'},
-    {rank:10,name:'NightCrawler',init:'NC',bg:'#1a1a2e',cl:'#fff',xp:1540,count:5,rare:1,status:'',dist:6,state:'PA',city:'Philadelphia'},
+    {rank:1,name:'Jake Danvers',init:'JD',bg:'#2d6a4f',cl:'#fff',xp:0,count:0,rare:0,status:'',dist:0,state:'PA',city:'Philadelphia',you:true,border:'border-gold'}
   ]
 };
-lbData.count=[...lbData.pts].sort(function(a,b){return b.count-a.count;}).map(function(r,i){return Object.assign({},r,{rank:i+1});});
-lbData.rare=[...lbData.pts].sort(function(a,b){return b.rare-a.rare;}).map(function(r,i){return Object.assign({},r,{rank:i+1});});
+lbData.count=[...lbData.pts];
+lbData.rare=[...lbData.pts];
 var activeLbTab='pts';
 
 function openLeaderboard(){
@@ -4154,6 +4022,61 @@ function renderNewsCards(articles){
 
 // Initial load since feed is the default active screen
 setTimeout(loadFishingNews,800);
+
+/* ── Story upload ── */
+function triggerStoryUpload(){
+  if(!currentUser){
+    showToast('Sign in to add your story 🎣');
+    openLoginModal();
+    return;
+  }
+  document.getElementById('story-file-input').click();
+}
+function handleStoryUpload(input){
+  if(!input.files||!input.files[0])return;
+  var file=input.files[0];
+  var reader=new FileReader();
+  reader.onload=function(e){
+    // Add story bubble to stories row
+    var storiesRow=document.querySelector('.stories-row');
+    var initials=currentUser?getInitials(currentUser.name):'?';
+    var color=currentUser?currentUser.avatar_color:'#2d6a4f';
+    var storyEl=document.createElement('div');
+    storyEl.className='story';
+    storyEl.innerHTML='<div class="story-ring" style="--story-color:'+color+'"><div class="story-inner" style="background:'+color+';color:#fff;font-size:13px;font-weight:700">'+initials+'</div></div>'
+      +'<div class="story-name">You</div>';
+    storiesRow.appendChild(storyEl);
+    showToast('Story added! 🎬');
+    input.value='';
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ── Post file handler ── */
+function handlePostFileSelect(input){
+  if(!input.files||!input.files[0])return;
+  var file=input.files[0];
+  var isVideo=file.type.startsWith('video/');
+  var icon=document.getElementById('uz-icon');
+  var text=document.getElementById('uz-text');
+  var hint=document.getElementById('uz-hint');
+  if(icon)icon.textContent=isVideo?'🎬':'📸';
+  if(text)text.textContent=file.name;
+  if(hint)hint.textContent=(file.size/1024/1024).toFixed(1)+' MB · '+file.type;
+  showToast('File selected: '+file.name+' ✅');
+}
+
+/* ── PAGE REFRESH — restore session without showing splash ── */
+(function handleRefresh(){
+  // If user has an active session, skip the splash on refresh
+  try{
+    var saved=localStorage.getItem('vb_user');
+    if(saved){
+      var overlay=document.getElementById('loc-overlay');
+      if(overlay)overlay.classList.add('hidden');
+    }
+  }catch(e){}
+})();
 
 function showToast(msg){
   var t=document.getElementById('vb-toast');
