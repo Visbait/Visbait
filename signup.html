@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join VisBait — Create Your Account</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --navy:#0a3d5c;
+  --navy-deep:#061f2e;
+  --teal:#1a85c4;
+  --teal-light:#3ca0d8;
+  --amber:#e9c46a;
+  --gold:#f0a500;
+  --moss:#2d6a4f;
+  --moss-light:#52b788;
+  --rust:#bc4749;
+  --surface:#ffffff;
+  --foam:#e8f4fd;
+  --text:#1a1a2e;
+  --muted:#5a6a7a;
+  --border:rgba(10,61,92,0.14);
+}
+
+html,body{min-height:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
+
+/* ── LAYOUT ── */
+.page{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:100vh;
+}
+
+/* ── LEFT PANEL — Hero ── */
+.hero{
+  background:var(--navy-deep);
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:40px 48px 48px;
+}
+
+/* Water ripple background */
+.hero::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(26,133,196,.25) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 20%, rgba(10,61,92,.6) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 100% at 50% 50%, #061f2e 40%, #0a3d5c 100%);
+  z-index:0;
+}
+
+/* Animated water lines */
+.water-lines{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  z-index:0;
+}
+.wl{
+  position:absolute;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(26,133,196,.25),transparent);
+  left:-100%;
+  animation:waveFlow linear infinite;
+}
+.wl:nth-child(1){top:25%;width:140%;animation-duration:12s;opacity:.6}
+.wl:nth-child(2){top:45%;width:120%;animation-duration:18s;animation-delay:-6s;opacity:.4}
+.wl:nth-child(3){top:65%;width:160%;animation-duration:15s;animation-delay:-3s;opacity:.5}
+.wl:nth-child(4){top:80%;width:130%;animation-duration:20s;animation-delay:-9s;opacity:.3}
+@keyframes waveFlow{to{left:100%}}
+
+/* Fish silhouettes */
+.fish-bg{
+  position:absolute;
+  z-index:0;
+  opacity:.07;
+  font-size:160px;
+  user-select:none;
+}
+.fish-bg:nth-child(1){bottom:-20px;right:-30px;transform:scaleX(-1)}
+.fish-bg:nth-child(2){top:60px;left:-20px;font-size:100px;opacity:.05}
+
+.hero-content{position:relative;z-index:1}
+.hero-bottom{position:relative;z-index:1}
+
+.logo-row{display:flex;align-items:center;gap:10px;margin-bottom:48px}
+.logo-icon{font-size:28px}
+.logo-text{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--amber);letter-spacing:-.3px}
+
+.hero-label{
+  font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:var(--teal-light);margin-bottom:16px;
+}
+.hero-title{
+  font-family:'Fraunces',serif;
+  font-size:clamp(36px,4vw,52px);
+  font-weight:900;
+  color:#fff;
+  line-height:1.1;
+  margin-bottom:20px;
+}
+.hero-title em{
+  font-style:italic;
+  color:var(--amber);
+}
+.hero-sub{
+  font-size:16px;color:rgba(255,255,255,.6);line-height:1.7;
+  max-width:360px;margin-bottom:40px;
+}
+
+/* Feature pills */
+.feature-list{display:flex;flex-direction:column;gap:12px;margin-bottom:48px}
+.feature-item{
+  display:flex;align-items:center;gap:12px;
+}
+.feature-icon{
+  width:38px;height:38px;border-radius:12px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.feature-text{font-size:14px;color:rgba(255,255,255,.72);line-height:1.4}
+.feature-text strong{color:#fff;font-weight:600;display:block}
+
+/* Social proof */
+.social-proof{
+  display:flex;align-items:center;gap:14px;
+}
+.sp-avatars{display:flex}
+.sp-av{
+  width:32px;height:32px;border-radius:50%;
+  border:2px solid var(--navy-deep);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#fff;
+  margin-left:-8px;
+}
+.sp-av:first-child{margin-left:0}
+.sp-text{font-size:13px;color:rgba(255,255,255,.55);line-height:1.4}
+.sp-text strong{color:rgba(255,255,255,.85);font-weight:600}
+
+/* ── RIGHT PANEL — Form ── */
+.form-panel{
+  background:var(--surface);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:40px 48px;
+  position:relative;
+}
+
+/* Subtle top accent */
+.form-panel::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:3px;
+  background:linear-gradient(90deg,var(--teal),var(--amber),var(--moss-light));
+}
+
+.form-inner{width:100%;max-width:420px}
+
+.form-header{margin-bottom:36px}
+.form-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--foam);color:var(--teal);
+  font-size:12px;font-weight:600;
+  padding:4px 12px;border-radius:20px;
+  margin-bottom:16px;border:1px solid rgba(26,133,196,.2);
+}
+.form-title{
+  font-family:'Fraunces',serif;font-size:30px;font-weight:700;
+  color:var(--text);line-height:1.2;margin-bottom:8px;
+}
+.form-sub{font-size:14px;color:var(--muted);line-height:1.6}
+
+/* Step indicator */
+.steps{
+  display:flex;align-items:center;gap:0;
+  margin-bottom:32px;
+}
+.step-item{display:flex;align-items:center;gap:0;flex:1}
+.step-dot{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;
+  border:2px solid var(--border);
+  background:var(--surface);
+  color:var(--muted);
+  flex-shrink:0;
+  transition:all .3s;
+}
+.step-dot.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.step-dot.done{background:var(--moss-light);color:#fff;border-color:var(--moss-light)}
+.step-line{flex:1;height:2px;background:var(--border);transition:background .3s}
+.step-line.done{background:var(--moss-light)}
+
+/* Form groups */
+.step-form{display:none;animation:fadeUp .35s ease}
+.step-form.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{margin-bottom:18px;position:relative}
+label{
+  display:block;font-size:12px;font-weight:600;
+  color:var(--muted);margin-bottom:6px;letter-spacing:.3px;
+  text-transform:uppercase;
+}
+input[type=text],input[type=email],input[type=password],input[type=date],select{
+  width:100%;padding:12px 14px;
+  border:1.5px solid var(--border);border-radius:11px;
+  font-size:15px;font-family:'DM Sans',sans-serif;
+  color:var(--text);background:var(--surface);
+  outline:none;transition:all .2s;
+  appearance:none;
+}
+input:focus,select:focus{
+  border-color:var(--teal);
+  box-shadow:0 0 0 3px rgba(26,133,196,.1);
+}
+input.error{border-color:var(--rust)!important;box-shadow:0 0 0 3px rgba(188,71,73,.1)!important}
+.field-icon{
+  position:absolute;right:13px;top:36px;
+  font-size:16px;color:var(--muted);
+  cursor:pointer;pointer-events:none;
+}
+.field-icon.clickable{pointer-events:all}
+.err-msg{font-size:12px;color:var(--rust);margin-top:5px;display:none}
+.err-msg.show{display:block}
+
+/* Password strength */
+.pw-strength{margin-top:8px;display:none}
+.pw-strength.show{display:block}
+.pw-bars{display:flex;gap:4px;margin-bottom:5px}
+.pw-bar{flex:1;height:4px;border-radius:4px;background:var(--border);transition:background .3s}
+.pw-bar.weak{background:var(--rust)}
+.pw-bar.fair{background:var(--amber)}
+.pw-bar.good{background:var(--moss-light)}
+.pw-bar.strong{background:var(--moss)}
+.pw-label{font-size:11px;font-weight:600;color:var(--muted)}
+
+/* Fishing style selector */
+.style-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  margin-top:6px;
+}
+.style-chip{
+  padding:10px 6px;border-radius:11px;
+  border:1.5px solid var(--border);
+  background:var(--surface);
+  text-align:center;cursor:pointer;
+  transition:all .2s;
+  font-family:'DM Sans',sans-serif;
+}
+.style-chip:hover{border-color:var(--teal);background:var(--foam)}
+.style-chip.selected{border-color:var(--navy);background:var(--foam)}
+.style-chip-icon{font-size:22px;display:block;margin-bottom:4px}
+.style-chip-lbl{font-size:11px;font-weight:600;color:var(--text);line-height:1.2}
+
+/* Avatar picker */
+.avatar-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.av-opt{
+  width:52px;height:52px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;font-weight:700;color:#fff;
+  cursor:pointer;border:3px solid transparent;
+  transition:all .2s;
+}
+.av-opt:hover{transform:scale(1.08)}
+.av-opt.selected{border-color:var(--navy);box-shadow:0 0 0 2px rgba(10,61,92,.3)}
+
+/* COPPA */
+.coppa-box{
+  background:#fff8e1;border:1.5px solid #e9c46a;border-radius:12px;
+  padding:12px 14px;margin-bottom:18px;
+  display:flex;gap:10px;align-items:flex-start;font-size:13px;color:#7a5a00;
+  line-height:1.5;
+}
+.coppa-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+
+/* Checkbox */
+.check-row{
+  display:flex;align-items:flex-start;gap:10px;
+  margin-bottom:14px;cursor:pointer;
+}
+.check-row input[type=checkbox]{
+  width:18px;height:18px;flex-shrink:0;
+  accent-color:var(--navy);cursor:pointer;margin-top:2px;
+}
+.check-lbl{font-size:13px;color:var(--muted);line-height:1.5}
+.check-lbl a{color:var(--teal);text-decoration:none;font-weight:600}
+.check-lbl a:hover{text-decoration:underline}
+
+/* CTA button */
+.cta-btn{
+  width:100%;padding:15px;
+  border-radius:13px;border:none;
+  background:var(--navy);color:#fff;
+  font-size:16px;font-weight:700;
+  font-family:'DM Sans',sans-serif;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:all .2s;
+  margin-bottom:14px;
+  position:relative;
+  overflow:hidden;
+}
+.cta-btn::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(rgba(255,255,255,.06),transparent);
+  pointer-events:none;
+}
+.cta-btn:hover{background:#0d4f73;transform:translateY(-1px);box-shadow:0 6px 20px rgba(10,61,92,.35)}
+.cta-btn:active{transform:translateY(0)}
+.cta-btn:disabled{background:var(--border);color:var(--muted);cursor:not-allowed;transform:none;box-shadow:none}
+
+.back-btn{
+  width:100%;padding:12px;
+  border-radius:13px;border:1.5px solid var(--border);
+  background:transparent;color:var(--muted);
+  font-size:14px;font-weight:600;
+  font-family:'DM Sans',sans-serif;
+  cursor:pointer;transition:all .2s;margin-bottom:14px;
+}
+.back-btn:hover{border-color:var(--navy);color:var(--navy);background:var(--foam)}
+
+.divider{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:14px;
+  color:var(--muted);font-size:12px;font-weight:600;
+}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* Social signup buttons */
+.social-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.social-btn{
+  padding:11px;border-radius:11px;
+  border:1.5px solid var(--border);background:var(--surface);
+  font-size:13px;font-weight:600;color:var(--text);
+  font-family:'DM Sans',sans-serif;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:all .2s;
+}
+.social-btn:hover{border-color:var(--navy);background:var(--foam)}
+.social-icon{font-size:18px}
+
+.signin-row{
+  text-align:center;font-size:13px;color:var(--muted);
+  margin-top:4px;
+}
+.signin-row a{color:var(--teal);font-weight:600;text-decoration:none}
+.signin-row a:hover{text-decoration:underline}
+
+/* Success screen */
+.success-screen{display:none;text-align:center;padding:20px 0;animation:fadeUp .4s ease}
+.success-screen.show{display:block}
+.success-fish{font-size:72px;margin-bottom:16px;animation:bobFish 2s ease-in-out infinite}
+@keyframes bobFish{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.success-title{
+  font-family:'Fraunces',serif;font-size:28px;font-weight:700;
+  color:var(--text);margin-bottom:10px;
+}
+.success-sub{font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:28px}
+.success-badges{
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  margin-bottom:28px;
+}
+.success-badge{
+  display:flex;align-items:center;gap:7px;
+  background:var(--foam);border:1px solid rgba(26,133,196,.2);
+  border-radius:20px;padding:6px 13px;
+  font-size:13px;font-weight:600;color:var(--teal);
+}
+.go-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--navy);color:#fff;
+  font-size:16px;font-weight:700;
+  font-family:'DM Sans',sans-serif;
+  padding:15px 40px;border-radius:14px;border:none;
+  cursor:pointer;transition:all .2s;
+  text-decoration:none;
+}
+.go-btn:hover{background:#0d4f73;transform:translateY(-2px);box-shadow:0 8px 24px rgba(10,61,92,.3)}
+
+/* Age gate screen */
+.age-gate{display:none;text-align:center;padding:40px 20px;animation:fadeUp .3s ease}
+.age-gate.show{display:block}
+.ag-icon{font-size:56px;margin-bottom:16px}
+.ag-title{font-family:'Fraunces',serif;font-size:24px;font-weight:700;color:var(--text);margin-bottom:10px}
+.ag-sub{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:24px;max-width:320px;margin-left:auto;margin-right:auto}
+
+/* Loading overlay */
+.loading-overlay{
+  position:fixed;inset:0;background:rgba(6,31,46,.85);
+  z-index:999;display:none;align-items:center;justify-content:center;
+  flex-direction:column;gap:16px;
+}
+.loading-overlay.show{display:flex}
+.loader-fish{font-size:48px;animation:swimLoad 1s ease-in-out infinite alternate}
+@keyframes swimLoad{from{transform:translateX(-20px)}to{transform:translateX(20px)}}
+.loader-text{color:#fff;font-size:15px;font-weight:600;opacity:.8}
+
+/* Mobile responsive */
+@media(max-width:768px){
+  .page{grid-template-columns:1fr}
+  .hero{display:none}
+  .form-panel{padding:32px 24px;align-items:flex-start;min-height:100vh}
+  .form-inner{max-width:100%}
+  .field-row{grid-template-columns:1fr}
+}
+
+@media(max-width:480px){
+  .style-grid{grid-template-columns:repeat(2,1fr)}
+  .social-btns{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loader-fish">🎣</div>
+  <div class="loader-text">Setting up your account...</div>
+</div>
+
+<div class="page">
+
+  <!-- ══ LEFT HERO ══ -->
+  <div class="hero">
+    <div class="water-lines">
+      <div class="wl"></div><div class="wl"></div>
+      <div class="wl"></div><div class="wl"></div>
+    </div>
+    <div class="fish-bg">🐟</div>
+    <div class="fish-bg" style="right:auto;left:-20px;top:auto;bottom:100px">🎣</div>
+
+    <div class="hero-content">
+      <div class="logo-row">
+        <span class="logo-icon">🎣</span>
+        <span class="logo-text">VisBait</span>
+      </div>
+
+      <div class="hero-label">The Fishing Social Community</div>
+      <h1 class="hero-title">Where anglers<br>come to <em>thrive.</em></h1>
+      <p class="hero-sub">Post your catches, find secret spots, trade gear, climb the leaderboard. Everything a fisherman needs in one place.</p>
+
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-icon">📍</div>
+          <div class="feature-text">
+            <strong>Community Fishing Map</strong>
+            Discover and share secret spots near you
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🏆</div>
+          <div class="feature-text">
+            <strong>Achievement System</strong>
+            Earn XP, unlock badges, climb the leaderboard
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🛒</div>
+          <div class="feature-text">
+            <strong>The Tackle Shop</strong>
+            Buy and sell gear to anglers near you
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🎬</div>
+          <div class="feature-text">
+            <strong>CastReels</strong>
+            Short-form fishing video feed — just the good stuff
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-bottom">
+      <div class="social-proof">
+        <div class="sp-avatars">
+          <div class="sp-av" style="background:#1a85c4">MB</div>
+          <div class="sp-av" style="background:#2d6a4f">TL</div>
+          <div class="sp-av" style="background:#533ab7">RD</div>
+          <div class="sp-av" style="background:#bc4749">WW</div>
+          <div class="sp-av" style="background:#e9c46a;color:#1a1a2e">+</div>
+        </div>
+        <div class="sp-text">
+          <strong>Join thousands of anglers</strong><br>
+          already on VisBait
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ RIGHT FORM ══ -->
+  <div class="form-panel">
+    <div class="form-inner">
+
+      <!-- Age gate (shown if under 13) -->
+      <div class="age-gate" id="age-gate">
+        <div class="ag-icon">🚫🎣</div>
+        <div class="ag-title">You must be 13 or older</div>
+        <div class="ag-sub">VisBait is designed for anglers 13 and up. If you're under 13, ask a parent or guardian to create an account for family use.</div>
+        <button class="back-btn" style="max-width:240px;margin:0 auto" onclick="resetToStart()">← Go Back</button>
+      </div>
+
+      <!-- Main form -->
+      <div id="main-form">
+        <div class="form-header">
+          <div class="form-tag">🎣 Free to join</div>
+          <h2 class="form-title">Create your account</h2>
+          <p class="form-sub">Takes less than 2 minutes. No credit card needed.</p>
+        </div>
+
+        <!-- Step indicator -->
+        <div class="steps" id="step-indicator">
+          <div class="step-item">
+            <div class="step-dot active" id="sdot-1">1</div>
+            <div class="step-line" id="sline-1"></div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot" id="sdot-2">2</div>
+            <div class="step-line" id="sline-2"></div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot" id="sdot-3">3</div>
+            <div class="step-line" id="sline-3" style="background:transparent"></div>
+          </div>
+          <div class="step-dot" id="sdot-4">✓</div>
+        </div>
+
+        <!-- ── STEP 1: Basics ── -->
+        <div class="step-form active" id="step-1">
+          <div class="field-row">
+            <div class="field">
+              <label>First Name</label>
+              <input type="text" id="fname" placeholder="Jake" autocomplete="given-name">
+              <div class="err-msg" id="err-fname">Please enter your first name</div>
+            </div>
+            <div class="field">
+              <label>Last Name</label>
+              <input type="text" id="lname" placeholder="Danvers" autocomplete="family-name">
+              <div class="err-msg" id="err-lname">Please enter your last name</div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Email Address</label>
+            <input type="email" id="email" placeholder="jake@example.com" autocomplete="email">
+            <span class="field-icon">📧</span>
+            <div class="err-msg" id="err-email">Please enter a valid email address</div>
+          </div>
+
+          <div class="field">
+            <label>Date of Birth</label>
+            <input type="date" id="dob" max="">
+            <div class="err-msg" id="err-dob">You must be 13 or older to join VisBait</div>
+          </div>
+
+          <!-- COPPA notice -->
+          <div class="coppa-box">
+            <span class="coppa-icon">ℹ️</span>
+            <span>VisBait requires users to be <strong>13 or older</strong> in accordance with COPPA (Children's Online Privacy Protection Act).</span>
+          </div>
+
+          <div class="divider">or sign up with</div>
+          <div class="social-btns">
+            <button class="social-btn" onclick="socialSignup('Google')">
+              <span class="social-icon">🌐</span> Google
+            </button>
+            <button class="social-btn" onclick="socialSignup('Apple')">
+              <span class="social-icon">🍎</span> Apple
+            </button>
+          </div>
+
+          <button class="cta-btn" onclick="nextStep(1)">Continue →</button>
+          <div class="signin-row">Already have an account? <a href="index.html">Sign in →</a></div>
+        </div>
+
+        <!-- ── STEP 2: Account Setup ── -->
+        <div class="step-form" id="step-2">
+          <div class="field">
+            <label>Username</label>
+            <input type="text" id="username" placeholder="@JakeDanvers" autocomplete="username" oninput="checkUsername(this)">
+            <span class="field-icon" id="username-check"></span>
+            <div class="err-msg" id="err-username">Username must be 3–20 characters, letters and numbers only</div>
+          </div>
+
+          <div class="field">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="At least 12 characters" oninput="checkPassword(this)">
+            <span class="field-icon clickable" id="pw-toggle" onclick="togglePw('password','pw-toggle')">👁️</span>
+            <div class="pw-strength show" id="pw-strength">
+              <div class="pw-bars">
+                <div class="pw-bar" id="pwb1"></div>
+                <div class="pw-bar" id="pwb2"></div>
+                <div class="pw-bar" id="pwb3"></div>
+                <div class="pw-bar" id="pwb4"></div>
+              </div>
+              <div class="pw-label" id="pw-label">Enter a password</div>
+            </div>
+            <div class="err-msg" id="err-password">Password must be at least 12 characters</div>
+          </div>
+
+          <div class="field">
+            <label>Confirm Password</label>
+            <input type="password" id="confirm-pw" placeholder="Repeat your password">
+            <span class="field-icon clickable" id="cpw-toggle" onclick="togglePw('confirm-pw','cpw-toggle')">👁️</span>
+            <div class="err-msg" id="err-confirm-pw">Passwords do not match</div>
+          </div>
+
+          <div class="field">
+            <label>Location (City, State)</label>
+            <input type="text" id="location" placeholder="Philadelphia, PA">
+            <span class="field-icon">📍</span>
+          </div>
+
+          <button class="cta-btn" onclick="nextStep(2)">Continue →</button>
+          <button class="back-btn" onclick="goBack(2)">← Back</button>
+        </div>
+
+        <!-- ── STEP 3: Fishing Profile ── -->
+        <div class="step-form" id="step-3">
+          <div class="field">
+            <label>Pick Your Avatar</label>
+            <div class="avatar-row" id="avatar-row">
+              <div class="av-opt selected" style="background:#1a85c4" data-av="teal" onclick="pickAvatar(this,'teal','#1a85c4')">JD</div>
+              <div class="av-opt" style="background:#2d6a4f" data-av="moss" onclick="pickAvatar(this,'moss','#2d6a4f')">JD</div>
+              <div class="av-opt" style="background:#533ab7" data-av="purple" onclick="pickAvatar(this,'purple','#533ab7')">JD</div>
+              <div class="av-opt" style="background:#bc4749" data-av="rust" onclick="pickAvatar(this,'rust','#bc4749')">JD</div>
+              <div class="av-opt" style="background:#e9c46a;color:#1a1a2e" data-av="amber" onclick="pickAvatar(this,'amber','#e9c46a')">JD</div>
+              <div class="av-opt" style="background:#061f2e" data-av="navy" onclick="pickAvatar(this,'navy','#061f2e')">JD</div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Your Fishing Style</label>
+            <div class="style-grid" id="style-grid">
+              <div class="style-chip selected" data-style="bass" onclick="pickStyle(this)">
+                <span class="style-chip-icon">🎣</span>
+                <span class="style-chip-lbl">Bass Angler</span>
+              </div>
+              <div class="style-chip" data-style="trout" onclick="pickStyle(this)">
+                <span class="style-chip-icon">🐟</span>
+                <span class="style-chip-lbl">Trout Specialist</span>
+              </div>
+              <div class="style-chip" data-style="saltwater" onclick="pickStyle(this)">
+                <span class="style-chip-icon">🌊</span>
+                <span class="style-chip-lbl">Saltwater</span>
+              </div>
+              <div class="style-chip" data-style="fly" onclick="pickStyle(this)">
+                <span class="style-chip-icon">🪰</span>
+                <span class="style-chip-lbl">Fly Fisher</span>
+              </div>
+              <div class="style-chip" data-style="ice" onclick="pickStyle(this)">
+                <span class="style-chip-icon">🧊</span>
+                <span class="style-chip-lbl">Ice Fisher</span>
+              </div>
+              <div class="style-chip" data-style="all" onclick="pickStyle(this)">
+                <span class="style-chip-icon">🎯</span>
+                <span class="style-chip-lbl">All-Around</span>
+              </div>
+            </div>
+            <div class="err-msg" id="err-style">Please select your fishing style</div>
+          </div>
+
+          <div class="check-row">
+            <input type="checkbox" id="agree-tos">
+            <label class="check-lbl" for="agree-tos">
+              I agree to VisBait's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. I confirm I am 13 years of age or older.
+            </label>
+          </div>
+          <div class="err-msg" id="err-tos" style="margin-top:-10px;margin-bottom:14px">Please agree to the Terms of Service to continue</div>
+
+          <div class="check-row">
+            <input type="checkbox" id="agree-email" checked>
+            <label class="check-lbl" for="agree-email">
+              Send me catch alerts, new spot notifications, and VisBait updates (optional)
+            </label>
+          </div>
+
+          <button class="cta-btn" onclick="submitForm()" id="submit-btn">
+            🎣 Create My Account
+          </button>
+          <button class="back-btn" onclick="goBack(3)">← Back</button>
+        </div>
+
+        <!-- Success screen -->
+        <div class="success-screen" id="success-screen">
+          <div class="success-fish">🎣</div>
+          <h2 class="success-title">You're on the water!</h2>
+          <p class="success-sub">Welcome to VisBait. Your account is ready.<br>Your first achievement is waiting for you.</p>
+          <div class="success-badges">
+            <div class="success-badge">🥉 First Cast — Unlocked</div>
+            <div class="success-badge">📍 0 Map Pins</div>
+            <div class="success-badge">⭐ 50 XP Bonus</div>
+          </div>
+          <a href="index.html" class="go-btn">Start Fishing →</a>
+        </div>
+      </div><!-- /main-form -->
+
+    </div><!-- /form-inner -->
+  </div><!-- /form-panel -->
+
+</div><!-- /page -->
+
+<script>
+var currentStep = 1;
+var selectedStyle = 'bass';
+var selectedAvatar = 'teal';
+var selectedAvatarBg = '#1a85c4';
+
+// Set max date for DOB (must be 13+ = today minus 13 years)
+(function(){
+  var d=new Date();
+  d.setFullYear(d.getFullYear()-13);
+  document.getElementById('dob').max=d.toISOString().split('T')[0];
+})();
+
+// Update avatar initials when name changes
+function updateInitials(){
+  var fn=(document.getElementById('fname').value||'').trim().charAt(0).toUpperCase();
+  var ln=(document.getElementById('lname').value||'').trim().charAt(0).toUpperCase();
+  var initials=(fn+ln)||'?';
+  document.querySelectorAll('.av-opt').forEach(function(av){av.textContent=initials;});
+}
+document.getElementById('fname').addEventListener('input',updateInitials);
+document.getElementById('lname').addEventListener('input',updateInitials);
+
+// ── NAVIGATION ──
+function nextStep(from){
+  if(!validateStep(from))return;
+  var next=from+1;
+  document.getElementById('step-'+from).classList.remove('active');
+
+  // Check age gate
+  if(from===1){
+    var dob=document.getElementById('dob').value;
+    if(dob){
+      var age=getAge(dob);
+      if(age<13){
+        document.getElementById('main-form').style.display='none';
+        document.getElementById('age-gate').classList.add('show');
+        return;
+      }
+    }
+  }
+
+  document.getElementById('step-'+next).classList.add('active');
+  document.getElementById('sdot-'+from).classList.remove('active');
+  document.getElementById('sdot-'+from).classList.add('done');
+  document.getElementById('sdot-'+from).textContent='✓';
+  if(document.getElementById('sline-'+from))document.getElementById('sline-'+from).classList.add('done');
+  document.getElementById('sdot-'+next).classList.add('active');
+  currentStep=next;
+  window.scrollTo(0,0);
+}
+
+function goBack(from){
+  var prev=from-1;
+  document.getElementById('step-'+from).classList.remove('active');
+  document.getElementById('step-'+prev).classList.add('active');
+  document.getElementById('sdot-'+from).classList.remove('active');
+  document.getElementById('sdot-'+prev).classList.remove('done');
+  document.getElementById('sdot-'+prev).classList.add('active');
+  document.getElementById('sdot-'+prev).textContent=prev;
+  if(document.getElementById('sline-'+prev))document.getElementById('sline-'+prev).classList.remove('done');
+  currentStep=prev;
+}
+
+function resetToStart(){
+  document.getElementById('age-gate').classList.remove('show');
+  document.getElementById('main-form').style.display='block';
+}
+
+// ── VALIDATION ──
+function validateStep(step){
+  var ok=true;
+  if(step===1){
+    var fname=document.getElementById('fname').value.trim();
+    var lname=document.getElementById('lname').value.trim();
+    var email=document.getElementById('email').value.trim();
+    var dob=document.getElementById('dob').value;
+    if(!fname){showErr('fname','Please enter your first name');ok=false;}else hideErr('fname');
+    if(!lname){showErr('lname','Please enter your last name');ok=false;}else hideErr('lname');
+    if(!email||!email.includes('@')){showErr('email','Please enter a valid email');ok=false;}else hideErr('email');
+    if(!dob){showErr('dob','Please enter your date of birth');ok=false;}else hideErr('dob');
+  }
+  if(step===2){
+    var un=document.getElementById('username').value.trim();
+    var pw=document.getElementById('password').value;
+    var cpw=document.getElementById('confirm-pw').value;
+    if(!un||un.length<3||un.length>20||!/^[a-zA-Z0-9_]+$/.test(un)){showErr('username','3–20 characters, letters/numbers/underscores only');ok=false;}else hideErr('username');
+    if(!pw||pw.length<12){showErr('password','Password must be at least 12 characters');ok=false;}else hideErr('password');
+    if(pw!==cpw){showErr('confirm-pw','Passwords do not match');ok=false;}else hideErr('confirm-pw');
+  }
+  if(step===3){
+    if(!document.getElementById('agree-tos').checked){
+      document.getElementById('err-tos').classList.add('show');ok=false;
+    }else{document.getElementById('err-tos').classList.remove('show');}
+  }
+  return ok;
+}
+
+function showErr(id,msg){
+  var el=document.getElementById('err-'+id);
+  if(el){el.textContent=msg;el.classList.add('show');}
+  var input=document.getElementById(id);
+  if(input)input.classList.add('error');
+}
+function hideErr(id){
+  var el=document.getElementById('err-'+id);
+  if(el)el.classList.remove('show');
+  var input=document.getElementById(id);
+  if(input)input.classList.remove('error');
+}
+
+function getAge(dob){
+  var today=new Date();
+  var birth=new Date(dob);
+  var age=today.getFullYear()-birth.getFullYear();
+  var m=today.getMonth()-birth.getMonth();
+  if(m<0||(m===0&&today.getDate()<birth.getDate()))age--;
+  return age;
+}
+
+// ── USERNAME CHECK ──
+var usernameTimer=null;
+function checkUsername(input){
+  var val=input.value.trim();
+  var icon=document.getElementById('username-check');
+  if(usernameTimer)clearTimeout(usernameTimer);
+  if(!val){icon.textContent='';return;}
+  icon.textContent='⏳';
+  usernameTimer=setTimeout(function(){
+    if(/^[a-zA-Z0-9_]{3,20}$/.test(val)){
+      icon.textContent='✅';
+      hideErr('username');
+    }else{
+      icon.textContent='❌';
+    }
+  },500);
+}
+
+// ── PASSWORD STRENGTH ──
+function checkPassword(input){
+  var pw=input.value;
+  var bars=[document.getElementById('pwb1'),document.getElementById('pwb2'),document.getElementById('pwb3'),document.getElementById('pwb4')];
+  var label=document.getElementById('pw-label');
+  bars.forEach(function(b){b.className='pw-bar';});
+  if(!pw){label.textContent='Enter a password';return;}
+  var score=0;
+  if(pw.length>=8)score++;
+  if(pw.length>=12)score++;
+  if(/[A-Z]/.test(pw)&&/[0-9]/.test(pw))score++;
+  if(/[^a-zA-Z0-9]/.test(pw))score++;
+  var levels=['weak','fair','good','strong'];
+  var labels=['Weak','Fair','Good','Strong 💪'];
+  for(var i=0;i<score;i++)bars[i].className='pw-bar '+levels[Math.min(score-1,3)];
+  label.textContent=labels[Math.min(score-1,3)]||'Enter a password';
+}
+
+// ── PASSWORD VISIBILITY ──
+function togglePw(inputId,iconId){
+  var inp=document.getElementById(inputId);
+  var ico=document.getElementById(iconId);
+  if(inp.type==='password'){inp.type='text';ico.textContent='🙈';}
+  else{inp.type='password';ico.textContent='👁️';}
+}
+
+// ── STYLE + AVATAR PICKERS ──
+function pickStyle(el){
+  document.querySelectorAll('.style-chip').forEach(function(c){c.classList.remove('selected');});
+  el.classList.add('selected');
+  selectedStyle=el.dataset.style;
+}
+function pickAvatar(el,name,bg){
+  document.querySelectorAll('.av-opt').forEach(function(a){a.classList.remove('selected');});
+  el.classList.add('selected');
+  selectedAvatar=name;
+  selectedAvatarBg=bg;
+}
+
+// ── SOCIAL SIGNUP ──
+function socialSignup(provider){
+  showLoading();
+  setTimeout(function(){
+    hideLoading();
+    alert(provider+' sign-in would open here in the full app (requires Supabase OAuth integration).');
+  },1200);
+}
+
+// ── SUBMIT ──
+function submitForm(){
+  if(!validateStep(3))return;
+  showLoading();
+  setTimeout(function(){
+    hideLoading();
+    document.getElementById('step-3').classList.remove('active');
+    document.getElementById('sdot-3').classList.remove('active');
+    document.getElementById('sdot-3').classList.add('done');
+    document.getElementById('sdot-3').textContent='✓';
+    document.getElementById('sdot-4').classList.add('done');
+    document.getElementById('sdot-4').textContent='✓';
+    if(document.getElementById('sline-3'))document.getElementById('sline-3').style.background='var(--moss-light)';
+    document.getElementById('success-screen').classList.add('show');
+  },1800);
+}
+
+function showLoading(){document.getElementById('loading-overlay').classList.add('show');}
+function hideLoading(){document.getElementById('loading-overlay').classList.remove('show');}
+</script>
+</body>
+</html>

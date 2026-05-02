@@ -1,0 +1,32 @@
+{
+  "appId": "com.visbait.app",
+  "appName": "VisBait",
+  "webDir": ".",
+  "plugins": {
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#0a3d5c",
+      "overlaysWebView": false
+    },
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#0a3d5c",
+      "iosSpinnerStyle": "small",
+      "spinnerColor": "#e9c46a",
+      "showSpinner": true,
+      "launchAutoHide": true
+    },
+    "Keyboard": {
+      "resize": "body",
+      "style": "DARK",
+      "resizeOnFullScreen": true
+    }
+  },
+  "ios": {
+    "backgroundColor": "#0a3d5c",
+    "contentInset": "always",
+    "scrollEnabled": false,
+    "limitsNavigationsToAppBoundDomains": true,
+    "allowsLinkPreview": false
+  }
+}
