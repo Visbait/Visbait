@@ -793,14 +793,26 @@ function validateStep(step){
     var dob=document.getElementById('dob').value;
     if(!fname){showErr('fname','Please enter your first name');ok=false;}else hideErr('fname');
     if(!lname){showErr('lname','Please enter your last name');ok=false;}else hideErr('lname');
-    if(!email||!email.includes('@')){showErr('email','Please enter a valid email');ok=false;}else hideErr('email');
+    if(!email||!email.includes('@')){showErr('email','Please enter a valid email address');ok=false;}
+    else{
+      var existingUsers=[];try{existingUsers=JSON.parse(localStorage.getItem('vb_users')||'[]');}catch(e){}
+      var emailTaken=existingUsers.some(function(u){return u.email&&u.email.toLowerCase()===email.toLowerCase();});
+      if(emailTaken){showErr('email','An account with this email already exists. Sign in instead.');ok=false;}
+      else hideErr('email');
+    }
     if(!dob){showErr('dob','Please enter your date of birth');ok=false;}else hideErr('dob');
   }
   if(step===2){
     var un=document.getElementById('username').value.trim();
     var pw=document.getElementById('password').value;
     var cpw=document.getElementById('confirm-pw').value;
-    if(!un||un.length<3||un.length>20||!/^[a-zA-Z0-9_]+$/.test(un)){showErr('username','3–20 characters, letters/numbers/underscores only');ok=false;}else hideErr('username');
+    if(!un||un.length<3||un.length>20||!/^[a-zA-Z0-9_]+$/.test(un)){showErr('username','3–20 characters, letters/numbers/underscores only');ok=false;}
+    else{
+      var existingUsers2=[];try{existingUsers2=JSON.parse(localStorage.getItem('vb_users')||'[]');}catch(e){}
+      var usernameTaken=existingUsers2.some(function(u){return u.username&&u.username.toLowerCase()===un.toLowerCase();});
+      if(usernameTaken){showErr('username','This username is taken. Please choose a different one.');ok=false;}
+      else hideErr('username');
+    }
     if(!pw||pw.length<12){showErr('password','Password must be at least 12 characters');ok=false;}else hideErr('password');
     if(pw!==cpw){showErr('confirm-pw','Passwords do not match');ok=false;}else hideErr('confirm-pw');
   }
@@ -904,8 +916,40 @@ function socialSignup(provider){
 function submitForm(){
   if(!validateStep(3))return;
   showLoading();
+
+  var fname=document.getElementById('fname').value.trim();
+  var lname=document.getElementById('lname').value.trim();
+  var fullName=(fname+' '+lname).trim();
+  var username=document.getElementById('username').value.trim().replace('@','');
+  var email=document.getElementById('email').value.trim();
+  var location=document.getElementById('location').value.trim();
+  var password=document.getElementById('password').value;
+
+  var newUser={
+    id:'user_'+Date.now(),
+    name:fullName,
+    username:username,
+    email:email,
+    password:password,
+    location:location,
+    fishing_style:selectedStyle,
+    avatar_color:selectedAvatarBg,
+    created_at:new Date().toISOString()
+  };
+
+  try{
+    localStorage.setItem('vb_user',JSON.stringify(newUser));
+    var users=JSON.parse(localStorage.getItem('vb_users')||'[]');
+    users.push(newUser);
+    localStorage.setItem('vb_users',JSON.stringify(users));
+    localStorage.setItem('vb_new_user',JSON.stringify(newUser));
+    setTimeout(function(){localStorage.removeItem('vb_new_user');},3000);
+  }catch(e){}
+
   setTimeout(function(){
     hideLoading();
+    var successTitle=document.querySelector('.success-title');
+    if(successTitle)successTitle.textContent='Welcome, '+fname+'! 🎣';
     document.getElementById('step-3').classList.remove('active');
     document.getElementById('sdot-3').classList.remove('active');
     document.getElementById('sdot-3').classList.add('done');
