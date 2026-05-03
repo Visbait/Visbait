@@ -1,0 +1,9 @@
+/**
+ * VisBait Config — COPY THIS FILE to config.js and fill in real values.
+ * config.js is in .gitignore — NEVER commit the real config.js
+ */
+window.VB_CONFIG = {
+  SUPABASE_URL:  'https://YOUR_PROJECT_ID.supabase.co',
+  SUPABASE_ANON: 'YOUR_SUPABASE_ANON_KEY',
+  GMAP_KEY:      'YOUR_GOOGLE_MAPS_API_KEY'
+};
