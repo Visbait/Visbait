@@ -903,62 +903,127 @@ function pickAvatar(el,name,bg){
   selectedAvatarBg=bg;
 }
 
-// ── SOCIAL SIGNUP ──
-function socialSignup(provider){
-  showLoading();
-  setTimeout(function(){
-    hideLoading();
-    alert(provider+' sign-in would open here in the full app (requires Supabase OAuth integration).');
-  },1200);
-}
+// ── SUPABASE CONFIG ── same keys as visbait.html
+var SUPABASE_URL  = 'https://bahewejrwczhlwnairmk.supabase.co';
+var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhaGV3ZWpyd2N6aGx3bmFpcm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3Mjk4NDcsImV4cCI6MjA5MzMwNTg0N30.gdaCUv6t76GTpXY_7VmGBYtcqEy6buEEkXHshqeLZ9M';
 
 // ── SUBMIT ──
 function submitForm(){
   if(!validateStep(3))return;
   showLoading();
 
-  var fname=document.getElementById('fname').value.trim();
-  var lname=document.getElementById('lname').value.trim();
-  var fullName=(fname+' '+lname).trim();
-  var username=document.getElementById('username').value.trim().replace('@','');
-  var email=document.getElementById('email').value.trim();
-  var location=document.getElementById('location').value.trim();
-  var password=document.getElementById('password').value;
+  var fname        = document.getElementById('fname').value.trim();
+  var lname        = document.getElementById('lname').value.trim();
+  var fullName     = (fname+' '+lname).trim();
+  var username     = document.getElementById('username').value.trim().replace('@','').toLowerCase();
+  var email        = document.getElementById('email').value.trim().toLowerCase();
+  var location     = document.getElementById('location').value.trim();
+  var password     = document.getElementById('password').value;
 
-  var newUser={
-    id:'user_'+Date.now(),
-    name:fullName,
-    username:username,
-    email:email,
-    password:password,
-    location:location,
-    fishing_style:selectedStyle,
-    avatar_color:selectedAvatarBg,
-    created_at:new Date().toISOString()
-  };
+  // ── Step 1: Create auth user in Supabase ──
+  fetch(SUPABASE_URL+'/auth/v1/signup',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'apikey':SUPABASE_ANON
+    },
+    body:JSON.stringify({email:email, password:password})
+  })
+  .then(function(r){return r.json();})
+  .then(function(authData){
 
-  try{
-    localStorage.setItem('vb_user',JSON.stringify(newUser));
-    var users=JSON.parse(localStorage.getItem('vb_users')||'[]');
-    users.push(newUser);
-    localStorage.setItem('vb_users',JSON.stringify(users));
-    localStorage.setItem('vb_new_user',JSON.stringify(newUser));
-    setTimeout(function(){localStorage.removeItem('vb_new_user');},3000);
-  }catch(e){}
+    if(authData.error || authData.error_description || authData.msg){
+      hideLoading();
+      var msg = authData.error_description || authData.msg || authData.error || 'Signup failed. Please try again.';
+      showSignupError(msg);
+      return;
+    }
 
-  setTimeout(function(){
+    var userId      = authData.user && authData.user.id;
+    var accessToken = authData.access_token || SUPABASE_ANON;
+
+    // ── Step 2: Insert profile row ──
+    return fetch(SUPABASE_URL+'/rest/v1/profiles',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'apikey':SUPABASE_ANON,
+        'Authorization':'Bearer '+accessToken,
+        'Prefer':'return=representation'
+      },
+      body:JSON.stringify({
+        id:           userId,
+        full_name:    fullName,
+        username:     username,
+        email:        email,
+        location:     location,
+        fishing_style:selectedStyle,
+        avatar_color: selectedAvatarBg
+      })
+    })
+    .then(function(r){return r.json();})
+    .then(function(profileData){
+
+      // ── Step 3: Save session to localStorage ──
+      var newUser = {
+        id:           userId || ('user_'+Date.now()),
+        name:         fullName,
+        username:     username,
+        email:        email,
+        location:     location,
+        fishing_style:selectedStyle,
+        avatar_color: selectedAvatarBg,
+        access_token: accessToken,
+        created_at:   new Date().toISOString()
+      };
+
+      try{
+        // Current session
+        localStorage.setItem('vb_user', JSON.stringify(newUser));
+        // User roster for local login fallback
+        var users = JSON.parse(localStorage.getItem('vb_users')||'[]');
+        // Prevent duplicate email entries
+        users = users.filter(function(u){ return u.email !== email; });
+        users.push(newUser);
+        localStorage.setItem('vb_users', JSON.stringify(users));
+        // Notify any open VisBait tab
+        localStorage.setItem('vb_new_user', JSON.stringify(newUser));
+        setTimeout(function(){ localStorage.removeItem('vb_new_user'); }, 4000);
+      }catch(e){}
+
+      // ── Step 4: Show success screen ──
+      hideLoading();
+      var successTitle = document.querySelector('.success-title');
+      if(successTitle) successTitle.textContent = 'Welcome, '+fname+'! 🎣';
+      document.getElementById('step-3').classList.remove('active');
+      document.getElementById('sdot-3').classList.remove('active');
+      document.getElementById('sdot-3').classList.add('done');
+      document.getElementById('sdot-3').textContent = '✓';
+      document.getElementById('sdot-4').classList.add('done');
+      document.getElementById('sdot-4').textContent = '✓';
+      var sline = document.getElementById('sline-3');
+      if(sline) sline.style.background = 'var(--moss-light)';
+      document.getElementById('success-screen').classList.add('show');
+    });
+  })
+  .catch(function(err){
     hideLoading();
-    var successTitle=document.querySelector('.success-title');
-    if(successTitle)successTitle.textContent='Welcome, '+fname+'! 🎣';
-    document.getElementById('step-3').classList.remove('active');
-    document.getElementById('sdot-3').classList.remove('active');
-    document.getElementById('sdot-3').classList.add('done');
-    document.getElementById('sdot-3').textContent='✓';
-    document.getElementById('sdot-4').classList.add('done');
-    document.getElementById('sdot-4').textContent='✓';
-    if(document.getElementById('sline-3'))document.getElementById('sline-3').style.background='var(--moss-light)';
-    document.getElementById('success-screen').classList.add('show');
-  },1800);
+    showSignupError('Connection error. Check your internet and try again. ('+(err.message||err)+')');
+  });
+}
+
+function showSignupError(msg){
+  // Show error above the submit button
+  var existing = document.getElementById('signup-error-msg');
+  if(!existing){
+    existing = document.createElement('div');
+    existing.id = 'signup-error-msg';
+    existing.style.cssText = 'background:#fce4ec;border:1px solid #f48fb1;border-radius:10px;padding:10px 13px;font-size:13px;color:#c62828;margin-bottom:12px;line-height:1.5';
+    var submitBtn = document.getElementById('submit-btn');
+    if(submitBtn) submitBtn.parentNode.insertBefore(existing, submitBtn);
+  }
+  existing.textContent = '⚠️ '+msg;
+  existing.style.display = 'block';
 }
 
 function showLoading(){document.getElementById('loading-overlay').classList.add('show');}
