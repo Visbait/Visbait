@@ -2547,7 +2547,9 @@ function savePinToSupabase(spot){
       'Content-Type':'application/json',
       'apikey':SUPABASE_ANON,
       'Authorization':'Bearer '+token,
-      'Prefer':'return=minimal'
+      'Prefer':'return=minimal',
+      'Accept-Profile':'public',
+      'Content-Profile':'public'
     },
     body:JSON.stringify({
       name:spot.name,
@@ -2568,7 +2570,7 @@ function savePinToSupabase(spot){
 function loadPinsFromSupabase(){
   if(SUPABASE_URL==='YOUR_SUPABASE_URL')return;
   fetch(SUPABASE_URL+'/rest/v1/map_pins?select=*&is_private=eq.false&order=created_at.desc&limit=100',{
-    headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON}
+    headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Accept-Profile':'public'}
   })
   .then(function(r){return r.json();})
   .then(function(pins){
@@ -2642,7 +2644,7 @@ function makePublic(spotId){
   if(SUPABASE_URL!=='YOUR_SUPABASE_URL'&&spot.supabaseId){
     fetch(SUPABASE_URL+'/rest/v1/map_pins?id=eq.'+spot.supabaseId,{
       method:'PATCH',
-      headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':'Bearer '+(currentUser&&currentUser.access_token||SUPABASE_ANON)},
+      headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':'Bearer '+(currentUser&&currentUser.access_token||SUPABASE_ANON),'Accept-Profile':'public','Content-Profile':'public'},
       body:JSON.stringify({is_private:false})
     }).catch(function(){});
   }
@@ -3011,7 +3013,9 @@ function saveListingToSupabase(listing){
       'Content-Type':'application/json',
       'apikey':SUPABASE_ANON,
       'Authorization':'Bearer '+token,
-      'Prefer':'return=minimal'
+      'Prefer':'return=minimal',
+      'Accept-Profile':'public',
+      'Content-Profile':'public'
     },
     body:JSON.stringify(listing)
   }).catch(function(e){console.log('Listing save error:',e);return Promise.resolve();});
@@ -3020,7 +3024,7 @@ function saveListingToSupabase(listing){
 function loadListingsFromSupabase(){
   if(SUPABASE_URL==='YOUR_SUPABASE_URL')return;
   fetch(SUPABASE_URL+'/rest/v1/marketplace_listings?select=*&order=created_at.desc&limit=50',{
-    headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON}
+    headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Accept-Profile':'public'}
   })
   .then(function(r){return r.json();})
   .then(function(listings){
@@ -3535,7 +3539,7 @@ function submitLogin(){
       var accessToken = data.access_token;
       var userId = data.user && data.user.id;
       return fetch(SUPABASE_URL + '/rest/v1/profiles?id=eq.' + userId + '&select=*', {
-        headers: { 'apikey': SUPABASE_ANON, 'Authorization': 'Bearer ' + accessToken }
+        headers: { 'apikey': SUPABASE_ANON, 'Authorization': 'Bearer ' + accessToken, 'Accept-Profile': 'public' }
       })
       .then(function(r){ return r.json(); })
       .then(function(profiles){
@@ -3974,7 +3978,9 @@ function saveThreadToSupabase(thread){
       'Content-Type':'application/json',
       'apikey':SUPABASE_ANON,
       'Authorization':'Bearer '+token,
-      'Prefer':'return=minimal'
+      'Prefer':'return=minimal',
+      'Accept-Profile':'public',
+      'Content-Profile':'public'
     },
     body:JSON.stringify(thread)
   }).catch(function(e){console.log('Thread save error:',e);});
@@ -3983,7 +3989,7 @@ function saveThreadToSupabase(thread){
 function loadThreadsFromSupabase(){
   if(SUPABASE_URL==='YOUR_SUPABASE_URL')return;
   fetch(SUPABASE_URL+'/rest/v1/threads?select=*&order=created_at.desc&limit=30',{
-    headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON}
+    headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Accept-Profile':'public'}
   })
   .then(function(r){return r.json();})
   .then(function(threads){
