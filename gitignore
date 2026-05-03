@@ -1,0 +1,21 @@
+# VisBait .gitignore
+
+# ══ SECRETS — NEVER COMMIT ══
+config.js          # Real API keys live here — use config.js.example instead
+.env
+.env.local
+.env.*
+
+# ══ SYSTEM ══
+.DS_Store
+Thumbs.db
+*.log
+node_modules/
+dist/
+.cache/
+
+# ══ EDITOR ══
+.vscode/
+.idea/
+*.swp
+*.swo

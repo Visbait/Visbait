@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Load keys from gitignored config.js FIRST -->
+  <script src="/config.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VisBait — Fishing Social App</title>
@@ -3345,8 +3347,9 @@ function epUseMyLocation(){
 ══════════════════════════════════════════════════════ */
 
 /* ── Supabase config (replace with your real keys) ── */
-var SUPABASE_URL    = 'https://bahewejrwczhlwnairmk.supabase.co';
-var SUPABASE_ANON   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhaGV3ZWpyd2N6aGx3bmFpcm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3Mjk4NDcsImV4cCI6MjA5MzMwNTg0N30.gdaCUv6t76GTpXY_7VmGBYtcqEy6buEEkXHshqeLZ9M';
+/* ── Keys loaded from /config.js (gitignored) ── */
+var SUPABASE_URL  = (window.VB_CONFIG && window.VB_CONFIG.SUPABASE_URL)  || 'YOUR_SUPABASE_URL';
+var SUPABASE_ANON = (window.VB_CONFIG && window.VB_CONFIG.SUPABASE_ANON) || 'YOUR_SUPABASE_ANON_KEY';
 
 /* ── In-memory user session (used before Supabase is connected) ── */
 var currentUser = null; // { id, name, username, email, location, fishing_style, avatar_color, avatar_initials }
@@ -4182,8 +4185,8 @@ document.head.appendChild(epShakeStyle);
 <script>
 /* ── GOOGLE MAPS INIT ── */
 /* ── API CONFIG (keys loaded from config, not hardcoded) ── */
-var _c=['AIzaSyAhn','ozpgvCllW','-FJrCWktLS','SeG9aNMqVp0'];
-var GMAP_KEY=_c.join('');/* obfuscated — restrict this key to visbait.com in Google Cloud Console */
+/* ── Google Maps key loaded from /config.js (gitignored) ── */
+var GMAP_KEY = (window.VB_CONFIG && window.VB_CONFIG.GMAP_KEY) || '';
 var dmapInst=null, smapInst=null;
 var dmapMarkers=[], smapMarkers=[];
 var gmapsReady=false, dmapQueued=false, smapQueued=false;
