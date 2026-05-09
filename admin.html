@@ -485,7 +485,7 @@ async function doAdminLogin(){
 
     // Step 2: Role check — must be 'admin'
     var pRes = await fetch(SUPABASE_URL+'/rest/v1/profiles?id=eq.'+uid+'&select=full_name,role',{
-      headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+token}
+      headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+token,'Accept-Profile':'public'}
     });
     var profiles = await pRes.json();
     if(!profiles || !profiles[0]){ errEl.textContent = 'Profile not found.'; return; }
@@ -532,7 +532,7 @@ function showPage(name, el){
 function sbGet(table, params){
   var qs = params || 'select=*&order=created_at.desc&limit=200';
   return fetch(SUPABASE_URL+'/rest/v1/'+table+'?'+qs,{
-    headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+adminToken}
+    headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+adminToken,'Accept-Profile':'public'}
   }).then(r=>r.json());
 }
 
@@ -540,7 +540,7 @@ function sbDelete(table, id){
   return fetch(SUPABASE_URL+'/rest/v1/'+table+'?id=eq.'+id,{
     method:'DELETE',
     headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+adminToken,
-             'Prefer':'return=representation'}
+             'Prefer':'return=representation','Accept-Profile':'public','Content-Profile':'public'}
   });
 }
 
@@ -548,7 +548,7 @@ function sbUpdate(table, id, body){
   return fetch(SUPABASE_URL+'/rest/v1/'+table+'?id=eq.'+id,{
     method:'PATCH',
     headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,
-             'Authorization':'Bearer '+adminToken,'Prefer':'return=representation'},
+             'Authorization':'Bearer '+adminToken,'Prefer':'return=representation','Accept-Profile':'public','Content-Profile':'public'},
     body:JSON.stringify(body)
   });
 }
@@ -557,7 +557,7 @@ function sbInsert(table, body){
   return fetch(SUPABASE_URL+'/rest/v1/'+table,{
     method:'POST',
     headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,
-             'Authorization':'Bearer '+adminToken,'Prefer':'return=representation'},
+             'Authorization':'Bearer '+adminToken,'Prefer':'return=representation','Accept-Profile':'public','Content-Profile':'public'},
     body:JSON.stringify(body)
   });
 }
