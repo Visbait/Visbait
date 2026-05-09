@@ -1255,6 +1255,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--surface2);color:var(--tex
   </div>
   <input type="file" id="story-file-input" accept="image/*,video/*" style="display:none" onchange="handleStoryUpload(this)">
 
+  <!-- Admin Announcement Banner -->
+  <div id="ann-banner" style="display:none;margin:0 12px 12px;background:linear-gradient(135deg,var(--water),var(--water-light));border-radius:12px;padding:12px 16px;position:relative">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span id="ann-banner-icon" style="font-size:20px">📣</span>
+      <div style="flex:1">
+        <div id="ann-banner-title" style="font-weight:700;font-size:14px;color:#fff"></div>
+        <div id="ann-banner-body" style="font-size:12px;color:rgba(255,255,255,.8);margin-top:2px"></div>
+      </div>
+      <button onclick="document.getElementById('ann-banner').style.display='none'" style="background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:14px;line-height:1">x</button>
+    </div>
+  </div>
+
   <div class="live-badge"><div class="live-pulse"></div>Live News</div>
 
   <!-- News loads here dynamically from loadFishingNews() -->
@@ -3352,8 +3364,8 @@ function epUseMyLocation(){
 
 /* ── Supabase config (replace with your real keys) ── */
 /* ── Keys loaded from /config.js (gitignored) ── */
-var SUPABASE_URL  = 'https://bahewejrwczhlwnairmk.supabase.co';
-var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhaGV3ZWpyd2N6aGx3bmFpcm1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3Mjk4NDcsImV4cCI6MjA5MzMwNTg0N30.gdaCUv6t76GTpXY_7VmGBYtcqEy6buEEkXHshqeLZ9M';
+var SUPABASE_URL  = (window.VB_CONFIG && window.VB_CONFIG.SUPABASE_URL)  || 'YOUR_SUPABASE_URL';
+var SUPABASE_ANON = (window.VB_CONFIG && window.VB_CONFIG.SUPABASE_ANON) || 'YOUR_SUPABASE_ANON_KEY';
 
 /* ── In-memory user session (used before Supabase is connected) ── */
 var currentUser = null; // { id, name, username, email, location, fishing_style, avatar_color, avatar_initials }
@@ -4040,6 +4052,22 @@ var FALLBACK_NEWS=[
   {title:"Mercury Marine unveils 2026 outboard lineup with 15% fuel efficiency gain",summary:"New V8 600HP flagship and redesigned 150hp four-stroke lead the release. Fuel injection system overhauled for cold-water starts.",source:'BoatUS',time:'3 days ago',icon:'🚤',url:'#'},
   {title:'Largemouth bass tournament records shattered at Lake Okeechobee Classic',summary:'First ever back-to-back 10lb+ bags recorded in a single day. Water temperature and weed growth blamed for the exceptional bite.',source:'Major League Fishing',time:'5 days ago',icon:'🏆',url:'#'},
 ];
+
+/* ── ANNOUNCEMENT BANNER ── */
+function loadAnnouncementBanner(){
+  fetch(SUPABASE_URL+'/rest/v1/announcements?select=*&order=created_at.desc&limit=1',{
+    headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+SUPABASE_ANON,'Accept-Profile':'public'}
+  }).then(function(r){return r.json();}).then(function(list){
+    if(!Array.isArray(list)||!list[0])return;
+    var a=list[0];
+    var icons={news:'📰',maintenance:'🔧',feature:'✨',contest:'🏆'};
+    document.getElementById('ann-banner-icon').textContent=icons[a.type]||'📣';
+    document.getElementById('ann-banner-title').textContent=a.title||'';
+    document.getElementById('ann-banner-body').textContent=a.body||'';
+    document.getElementById('ann-banner').style.display='block';
+  }).catch(function(){});
+}
+setTimeout(loadAnnouncementBanner,600);
 
 function loadFishingNews(){
   if(fishingNewsLoaded)return;

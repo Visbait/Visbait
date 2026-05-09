@@ -246,9 +246,12 @@
       <div class="nav-item" onclick="showPage('pins',this)"><span class="icon">📍</span>Map Pins</div>
       <div class="nav-item" onclick="showPage('listings',this)"><span class="icon">🛒</span>Listings</div>
       <div class="nav-item" onclick="showPage('threads',this)"><span class="icon">💬</span>Threads</div>
+      <div class="nav-item" onclick="showPage('reports',this)"><span class="icon">🚩</span>Reports</div>
+      <div class="nav-item" onclick="showPage('support',this)"><span class="icon">💌</span>Support</div>
 
       <div class="nav-section">Tools</div>
       <div class="nav-item" onclick="showPage('xp',this)"><span class="icon">⭐</span>Award XP</div>
+      <div class="nav-item" onclick="showPage('borders',this)"><span class="icon">🖼️</span>Borders</div>
       <div class="nav-item" onclick="showPage('announce',this)"><span class="icon">📣</span>Announce</div>
       <div class="nav-section">Logs</div>
       <div class="nav-item" onclick="showPage('logs',this)"><span class="icon">📋</span>Audit Log</div>
@@ -339,41 +342,75 @@
 
       <!-- AWARD XP -->
       <div id="page-xp" class="page">
-        <div class="page-title">Award XP</div>
-        <div class="page-sub">Manually grant XP or unlock achievements for a user</div>
+        <div class="page-title">Award XP &amp; Achievements</div>
+        <div class="page-sub">Manually grant XP, unlock achievements, or set user tier</div>
+
         <div class="table-wrap" style="padding:24px">
-          <div class="form-group">
-            <label>User Email or Username</label>
-            <input type="text" id="xp-user" placeholder="user@email.com or @username"/>
-          </div>
+          <h3 style="margin-bottom:16px;font-size:15px">Award XP</h3>
+          <div class="form-group"><label>User Email or @username</label><input type="text" id="xp-user" placeholder="user@email.com or @username"/></div>
           <div class="xp-row">
-            <div class="form-group">
-              <label>XP Amount</label>
-              <input type="number" id="xp-amount" placeholder="100" min="1" max="10000"/>
-            </div>
-            <div class="form-group">
-              <label>Reason</label>
-              <input type="text" id="xp-reason" placeholder="Beta tester reward"/>
-            </div>
+            <div class="form-group"><label>XP Amount</label><input type="number" id="xp-amount" placeholder="100" min="1" max="10000"/></div>
+            <div class="form-group"><label>Reason</label><input type="text" id="xp-reason" placeholder="Beta tester reward"/></div>
             <button class="btn btn-success" onclick="awardXPAdmin()">Award XP</button>
           </div>
         </div>
 
         <div class="table-wrap" style="padding:24px;margin-top:0">
-          <h3 style="margin-bottom:16px;font-size:15px">Unlock Achievement</h3>
-          <div class="form-group">
-            <label>User Email or Username</label>
-            <input type="text" id="ach-user" placeholder="user@email.com or @username"/>
+          <h3 style="margin-bottom:16px;font-size:15px">Set User Tier</h3>
+          <div class="form-group"><label>User Email or @username</label><input type="text" id="tier-user" placeholder="user@email.com or @username"/></div>
+          <div class="xp-row">
+            <div class="form-group">
+              <label>Tier</label>
+              <select id="tier-select">
+                <option value="free">Free</option>
+                <option value="pro">Pro ($7.99/mo)</option>
+                <option value="elite">Elite ($14.99/mo)</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="setTierAdmin()">Set Tier</button>
           </div>
+        </div>
+
+        <div class="table-wrap" style="padding:24px;margin-top:0">
+          <h3 style="margin-bottom:16px;font-size:15px">Unlock Achievement</h3>
+          <div class="form-group"><label>User Email or @username</label><input type="text" id="ach-user" placeholder="user@email.com or @username"/></div>
           <div class="form-group">
             <label>Achievement</label>
             <select id="ach-select">
-              <option value="beta_tester">🧪 Beta Tester — Early Adopter</option>
-              <option value="first_catch">🐟 First Catch</option>
-              <option value="map_maker">📍 Map Maker — 5 Pins Added</option>
-              <option value="marketplace_seller">🛒 First Listing</option>
-              <option value="community_starter">💬 Community Starter — 5 Threads</option>
-              <option value="top_angler">🏆 Top Angler</option>
+              <optgroup label="Special">
+                <option value="beta_tester">Beta Tester - Early Adopter</option>
+                <option value="top_angler">Top Angler</option>
+                <option value="visbait_legend">VisBait Legend</option>
+              </optgroup>
+              <optgroup label="Fishing">
+                <option value="first_catch">First Catch</option>
+                <option value="catch_10">10 Catches Logged</option>
+                <option value="catch_50">50 Catches Logged</option>
+                <option value="catch_100">Century Angler - 100 Catches</option>
+                <option value="big_fish">Big Fish - 10lb+ Catch</option>
+                <option value="slam">Grand Slam - 5 Species in a Day</option>
+              </optgroup>
+              <optgroup label="Map">
+                <option value="map_maker">Map Maker - 5 Pins Added</option>
+                <option value="explorer">Explorer - 25 Pins Added</option>
+                <option value="spot_verified">Verified Spot - 3 Confirmations</option>
+              </optgroup>
+              <optgroup label="Marketplace">
+                <option value="marketplace_seller">First Listing</option>
+                <option value="marketplace_10">Power Seller - 10 Listings</option>
+              </optgroup>
+              <optgroup label="Community">
+                <option value="community_starter">Community Starter - 5 Threads</option>
+                <option value="thread_hot">Hot Take - 50 Votes</option>
+                <option value="first_reel">First Reel Posted</option>
+                <option value="social_butterfly">100 Followers</option>
+              </optgroup>
+              <optgroup label="XP Milestones">
+                <option value="xp_500">500 XP Reached</option>
+                <option value="xp_1000">1,000 XP Reached</option>
+                <option value="xp_5000">5,000 XP Reached</option>
+                <option value="xp_10000">10,000 XP Reached</option>
+              </optgroup>
             </select>
           </div>
           <button class="btn btn-warn" onclick="unlockAchAdmin()">Unlock Achievement</button>
@@ -420,6 +457,68 @@
         <div class="page-sub">Every admin action recorded with timestamp and admin identity</div>
         <div class="table-wrap" style="padding:24px">
           <div id="log-list"><div class="loading"><span class="spinner"></span>Loading logs…</div></div>
+        </div>
+      </div>
+
+      <!-- REPORTS -->
+      <div id="page-reports" class="page">
+        <div class="page-title">Reports</div>
+        <div class="page-sub">User-submitted reports on content or other users</div>
+        <div class="table-wrap">
+          <div class="table-header"><h3>Open Reports</h3><button class="btn btn-ghost btn-sm" onclick="loadReports()">Refresh</button></div>
+          <table class="tbl">
+            <thead><tr><th>Type</th><th>Reported By</th><th>Target</th><th>Reason</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="reports-tbody"><tr><td colspan="6" class="loading"><span class="spinner"></span>Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SUPPORT -->
+      <div id="page-support" class="page">
+        <div class="page-title">Customer Support</div>
+        <div class="page-sub">Questions submitted by users through the app</div>
+        <div class="table-wrap">
+          <div class="table-header"><h3>Support Tickets</h3><button class="btn btn-ghost btn-sm" onclick="loadSupport()">Refresh</button></div>
+          <table class="tbl">
+            <thead><tr><th>User</th><th>Email</th><th>Question</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="support-tbody"><tr><td colspan="6" class="loading"><span class="spinner"></span>Loading…</td></tr></tbody>
+          </table>
+        </div>
+        <div class="table-wrap" style="padding:24px;margin-top:0">
+          <h3 style="margin-bottom:16px;font-size:15px">Reply to Ticket</h3>
+          <div class="form-group"><label>Ticket ID</label><input type="text" id="reply-ticket-id" placeholder="Paste ticket ID"/></div>
+          <div class="form-group"><label>Reply Message</label><textarea id="reply-body" placeholder="Type your reply…"></textarea></div>
+          <button class="btn btn-primary" onclick="replySupport()">Send Reply</button>
+        </div>
+      </div>
+
+      <!-- BORDERS -->
+      <div id="page-borders" class="page">
+        <div class="page-title">Award Profile Borders</div>
+        <div class="page-sub">Manually grant animated profile borders to users who earn them via leaderboard</div>
+        <div class="table-wrap" style="padding:24px">
+          <div class="form-group"><label>User Email or @username</label><input type="text" id="border-user" placeholder="user@email.com or @username"/></div>
+          <div class="form-group">
+            <label>Border</label>
+            <select id="border-select">
+              <option value="gold">🟡 Gold Border (Free)</option>
+              <option value="silver">⚪ Silver Border (500 XP)</option>
+              <option value="bronze">🟤 Bronze Border (250 XP)</option>
+              <option value="ocean_deep">🌊 Ocean Deep (1200 XP)</option>
+              <option value="fire_storm">🔥 Fire Storm (Rare)</option>
+              <option value="galaxy">🌌 Galaxy (Rare)</option>
+              <option value="vip_diamond">💎 VIP Diamond Crown (Rare)</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Reason (shown to user)</label><input type="text" id="border-reason" placeholder="Top leaderboard — May 2026"/></div>
+          <button class="btn btn-success" onclick="awardBorderAdmin()">Award Border</button>
+        </div>
+        <div class="table-wrap">
+          <div class="table-header"><h3>Recent Border Awards</h3></div>
+          <table class="tbl">
+            <thead><tr><th>User</th><th>Border</th><th>Reason</th><th>Awarded</th></tr></thead>
+            <tbody id="borders-log-tbody"><tr><td colspan="4" class="loading"><span class="spinner"></span>Loading…</td></tr></tbody>
+          </table>
         </div>
       </div>
 
@@ -526,6 +625,9 @@ function showPage(name, el){
   if(name==='threads') loadThreads();
   if(name==='logs')    loadLogs();
   if(name==='announce')loadAnnouncements();
+  if(name==='reports') loadReports();
+  if(name==='support') loadSupport();
+  if(name==='borders') loadBordersLog();
 }
 
 /* ─── SUPABASE HELPERS ─── */
@@ -693,7 +795,13 @@ function renderPins(list){
       <td>${p.confirmations||0}</td>
       <td>${p.is_private?'<span class="pill pill-amber">Private</span>':'<span class="pill pill-green">Public</span>'}</td>
       <td style="color:var(--muted)">${fmtDate(p.created_at)}</td>
-      <td><button class="btn btn-sm btn-danger" onclick="deletePin('${p.id}','${esc(p.name)}')">Delete</button></td>
+      <td>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <button class="btn btn-sm btn-ghost" onclick="editPin('${p.id}','${esc(p.name)}','${esc(p.note||"")}','${esc(p.type||"")}')">Edit</button>
+          <button class="btn btn-sm btn-warn" onclick="notifyPinOwner('${p.id}','${esc(p.name)}','${p.user_id}')">Notify</button>
+          <button class="btn btn-sm btn-danger" onclick="deletePin('${p.id}','${esc(p.name)}')">Delete</button>
+        </div>
+      </td>
     </tr>`).join('');
 }
 
@@ -908,6 +1016,162 @@ function closeModal(){ document.getElementById('confirm-modal').classList.remove
 async function executeModalAction(){
   closeModal();
   if(pendingModalAction) await pendingModalAction();
+}
+
+/* ─── SET TIER ─── */
+async function setTierAdmin(){
+  var identifier = document.getElementById('tier-user').value.trim();
+  var tier = document.getElementById('tier-select').value;
+  if(!identifier){ toast('Enter a user','t-error'); return; }
+  var user = await findUser(identifier);
+  if(!user){ toast('User not found','t-error'); return; }
+  await sbUpdate('profiles', user.id, {tier});
+  await logAction('SET_TIER', `Set ${user.full_name} tier to ${tier}`, user.id);
+  toast(`✅ ${user.full_name} is now ${tier}`, 't-success');
+  document.getElementById('tier-user').value='';
+}
+
+/* ─── PIN EDIT & NOTIFY ─── */
+function editPin(id, name, note, type){
+  var newName = prompt('Pin name:', name);
+  if(newName===null) return;
+  var newNote = prompt('Note:', note);
+  if(newNote===null) return;
+  sbUpdate('map_pins', id, {name:newName, note:newNote}).then(async()=>{
+    await logAction('EDIT_PIN', `Edited pin: ${name} -> ${newName}`, id);
+    toast('📍 Pin updated','t-success');
+    loadPins();
+  });
+}
+
+async function notifyPinOwner(pinId, pinName, userId){
+  var msg = prompt(`Notification message to send about pin "${pinName}":`);
+  if(!msg) return;
+  await sbInsert('notifications',{
+    user_id: userId,
+    title: 'Pin Notice',
+    body: msg,
+    type: 'admin',
+    pin_id: pinId,
+    created_at: new Date().toISOString()
+  });
+  await logAction('NOTIFY_PIN_OWNER', `Notified owner of pin: ${pinName} — "${msg}"`, pinId);
+  toast('📬 Notification sent','t-success');
+}
+
+/* ─── AWARD BORDER ─── */
+async function awardBorderAdmin(){
+  var identifier = document.getElementById('border-user').value.trim();
+  var border = document.getElementById('border-select').value;
+  var reason = document.getElementById('border-reason').value.trim();
+  if(!identifier){ toast('Enter a user','t-error'); return; }
+  var user = await findUser(identifier);
+  if(!user){ toast('User not found','t-error'); return; }
+  var existing = user.borders || [];
+  if(!existing.includes(border)) existing.push(border);
+  await sbUpdate('profiles', user.id, {borders: existing, active_border: border});
+  await sbInsert('admin_logs',{
+    admin_id: adminUser.id, admin_email: adminUser.email,
+    action: 'AWARD_BORDER', detail: `Awarded ${border} border to ${user.full_name}: ${reason}`,
+    target_id: user.id, created_at: new Date().toISOString()
+  });
+  await logAction('AWARD_BORDER', `Awarded ${border} to ${user.full_name}: ${reason}`, user.id);
+  toast(`🖼️ ${border} border awarded to ${user.full_name}`, 't-success');
+  document.getElementById('border-user').value='';
+  document.getElementById('border-reason').value='';
+  loadBordersLog();
+}
+
+async function loadBordersLog(){
+  var tbody = document.getElementById('borders-log-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="4" class="loading"><span class="spinner"></span></td></tr>';
+  var logs = await sbGet('admin_logs','select=*&action=eq.AWARD_BORDER&order=created_at.desc&limit=20');
+  if(!Array.isArray(logs)||!logs.length){ tbody.innerHTML='<tr><td colspan="4" style="padding:16px;color:var(--muted);text-align:center">No border awards yet</td></tr>'; return; }
+  tbody.innerHTML = logs.map(l=>`
+    <tr>
+      <td>${esc(l.admin_email||'—')}</td>
+      <td>${esc((l.detail||'').split('Awarded ')[1]?.split(' to')[0]||'—')}</td>
+      <td style="color:var(--muted)">${esc(l.detail||'')}</td>
+      <td style="color:var(--muted)">${fmtDate(l.created_at)}</td>
+    </tr>`).join('');
+}
+
+/* ─── REPORTS ─── */
+async function loadReports(){
+  var tbody = document.getElementById('reports-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="6" class="loading"><span class="spinner"></span></td></tr>';
+  var list = await sbGet('reports','select=*&order=created_at.desc&limit=100');
+  if(!Array.isArray(list)||!list.length){ tbody.innerHTML='<tr><td colspan="6" style="padding:16px;color:var(--muted);text-align:center">No reports yet</td></tr>'; return; }
+  tbody.innerHTML = list.map(r=>`
+    <tr>
+      <td><span class="pill pill-red">${esc(r.type||'—')}</span></td>
+      <td style="color:var(--muted)">${esc(r.reported_by||'—')}</td>
+      <td>${esc(r.target_id||'—')}</td>
+      <td>${esc(r.reason||'—')}</td>
+      <td style="color:var(--muted)">${fmtDate(r.created_at)}</td>
+      <td>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-sm btn-success" onclick="resolveReport('${r.id}')">Resolve</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteReport('${r.id}')">Dismiss</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+async function resolveReport(id){
+  await sbUpdate('reports', id, {status:'resolved'});
+  await logAction('RESOLVE_REPORT','Resolved report',id);
+  toast('✅ Report resolved','t-success');
+  loadReports();
+}
+
+async function deleteReport(id){
+  await sbDelete('reports', id);
+  await logAction('DISMISS_REPORT','Dismissed report',id);
+  toast('Report dismissed','t-warn');
+  loadReports();
+}
+
+/* ─── SUPPORT ─── */
+async function loadSupport(){
+  var tbody = document.getElementById('support-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="6" class="loading"><span class="spinner"></span></td></tr>';
+  var list = await sbGet('support_tickets','select=*&order=created_at.desc&limit=100');
+  if(!Array.isArray(list)||!list.length){ tbody.innerHTML='<tr><td colspan="6" style="padding:16px;color:var(--muted);text-align:center">No tickets yet</td></tr>'; return; }
+  tbody.innerHTML = list.map(t=>`
+    <tr>
+      <td><b>${esc(t.name||'—')}</b></td>
+      <td style="color:var(--muted)">${esc(t.email||'—')}</td>
+      <td>${esc(t.question||'—')}</td>
+      <td><span class="pill ${t.status==='open'?'pill-red':'pill-green'}">${t.status||'open'}</span></td>
+      <td style="color:var(--muted)">${fmtDate(t.created_at)}</td>
+      <td>
+        <button class="btn btn-sm btn-ghost" onclick="document.getElementById('reply-ticket-id').value='${t.id}'">Reply</button>
+        <button class="btn btn-sm btn-success" onclick="closeTicket('${t.id}')">Close</button>
+      </td>
+    </tr>`).join('');
+}
+
+async function replySupport(){
+  var id = document.getElementById('reply-ticket-id').value.trim();
+  var body = document.getElementById('reply-body').value.trim();
+  if(!id||!body){ toast('Fill ticket ID and reply','t-error'); return; }
+  await sbUpdate('support_tickets', id, {reply: body, status:'replied', replied_at: new Date().toISOString()});
+  await logAction('SUPPORT_REPLY', `Replied to ticket ${id}`, id);
+  toast('📬 Reply saved','t-success');
+  document.getElementById('reply-ticket-id').value='';
+  document.getElementById('reply-body').value='';
+  loadSupport();
+}
+
+async function closeTicket(id){
+  await sbUpdate('support_tickets', id, {status:'closed'});
+  await logAction('CLOSE_TICKET','Closed support ticket',id);
+  toast('Ticket closed','t-warn');
+  loadSupport();
 }
 
 /* ─── TOAST ─── */
