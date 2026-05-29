@@ -799,6 +799,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--surface2);color:var(--tex
 .login-loading.show{display:block}
 .login-spinner{font-size:32px;animation:loginSpin 1s linear infinite;display:block;margin:0 auto 10px}
 @keyframes loginSpin{to{transform:rotate(360deg)}}
+/* ── SETTINGS PANEL ── */
+.sp-row{display:flex;align-items:center;padding:13px 20px;border-bottom:1px solid rgba(255,255,255,.05);gap:12px}
+.sp-icon{font-size:18px;width:26px;flex-shrink:0}
+.sp-label{flex:1;font-size:15px;color:var(--text,#e8f4fd)}
+.sp-link{cursor:pointer;transition:background .15s}
+.sp-link:hover{background:rgba(255,255,255,.04)}
+.sp-toggle{position:relative;width:44px;height:24px;flex-shrink:0}
+.sp-toggle input{opacity:0;width:0;height:0;position:absolute}
+.sp-slider{position:absolute;inset:0;background:#1a3348;border-radius:34px;cursor:pointer;transition:.3s}
+.sp-slider:before{content:'';position:absolute;width:18px;height:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s}
+.sp-toggle input:checked+.sp-slider{background:var(--water-light,#1a85c4)}
+.sp-toggle input:checked+.sp-slider:before{transform:translateX(20px)}
+.sp-theme-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;transition:all .15s}
+.sp-theme-btn.active{background:rgba(26,133,196,.25);border-color:var(--water-light,#1a85c4)}
+#settings-panel.open{transform:translateX(0)}
 </style>
 </head>
 <body>
@@ -1201,6 +1216,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--surface2);color:var(--tex
 
 <!-- ── TOP NAV ── -->
 <nav class="topnav">
+  <button class="nav-icon-btn" onclick="openSettings()" title="Settings" style="font-size:18px">☰</button>
   <div class="logo"><span style="font-size:24px">🎣</span> VisBait</div>
   <div class="nav-right">
     <button class="nav-icon-btn" onclick="openVip()" title="VIP Perks" style="background:linear-gradient(135deg,rgba(255,215,0,.2),rgba(255,165,0,.1));border-color:rgba(255,215,0,.4)">👑</button>
@@ -3489,6 +3505,103 @@ function signOut(){
   },600);
 }
 
+/* ── SETTINGS PANEL ── */
+function openSettings(){
+  var panel=document.getElementById('settings-panel');
+  var overlay=document.getElementById('settings-overlay');
+  overlay.style.display='block';
+  panel.classList.add('open');
+  // Update profile info
+  if(currentUser){
+    var initials=(currentUser.full_name||'?').split(' ').map(function(n){return n[0];}).join('').toUpperCase().slice(0,2);
+    document.getElementById('sp-avatar').textContent=initials;
+    document.getElementById('sp-avatar').style.background=currentUser.avatar_color||'#1a85c4';
+    document.getElementById('sp-name').textContent=currentUser.full_name||'Angler';
+    document.getElementById('sp-handle').textContent='@'+(currentUser.username||'angler');
+    var tier=currentUser.tier||'free';
+    var tierEl=document.getElementById('sp-tier');
+    tierEl.textContent=tier==='elite'?'👑 Elite':tier==='pro'?'⚡ Pro':'🆓 Free';
+    tierEl.style.background=tier==='elite'?'rgba(240,165,0,.2)':tier==='pro'?'rgba(26,133,196,.2)':'rgba(82,183,136,.2)';
+    tierEl.style.color=tier==='elite'?'#f0a500':tier==='pro'?'#1a85c4':'#52b788';
+    document.getElementById('sp-upgrade').style.display=tier==='free'?'block':'none';
+  }
+  // Load saved prefs
+  try{
+    var notif=localStorage.getItem('vb_pref_notif');
+    var loc=localStorage.getItem('vb_pref_location');
+    var priv=localStorage.getItem('vb_pref_private');
+    if(notif!==null) document.getElementById('sp-notif').checked=notif==='true';
+    if(loc!==null) document.getElementById('sp-location').checked=loc==='true';
+    if(priv!==null) document.getElementById('sp-private').checked=priv==='true';
+    var theme=localStorage.getItem('vb_theme')||'dark';
+    setAppTheme(theme,true);
+  }catch(e){}
+}
+
+function closeSettings(){
+  document.getElementById('settings-panel').classList.remove('open');
+  document.getElementById('settings-overlay').style.display='none';
+}
+
+function saveSpPref(key,val){
+  try{localStorage.setItem('vb_pref_'+key,val);}catch(e){}
+}
+
+function setAppTheme(theme,silent){
+  // Update active button
+  ['dark','light','auto'].forEach(function(t){
+    var btn=document.getElementById('sp-theme-'+t);
+    if(btn) btn.classList.toggle('active',t===theme);
+  });
+  try{localStorage.setItem('vb_theme',theme);}catch(e){}
+  if(!silent) showToast('Theme set to '+theme);
+  // Apply theme
+  if(theme==='light'){
+    document.documentElement.style.setProperty('--bg','#f0f4f8');
+    document.documentElement.style.setProperty('--surface','#ffffff');
+    document.documentElement.style.setProperty('--text','#0a1628');
+  } else {
+    document.documentElement.style.removeProperty('--bg');
+    document.documentElement.style.removeProperty('--surface');
+    document.documentElement.style.removeProperty('--text');
+  }
+}
+
+/* ── DELETE ACCOUNT ── */
+function openDeleteAccount(){
+  closeSettings();
+  document.getElementById('delete-account-overlay').style.display='flex';
+  document.getElementById('delete-confirm-input').value='';
+}
+
+function closeDeleteAccount(){
+  document.getElementById('delete-account-overlay').style.display='none';
+}
+
+async function confirmDeleteAccount(){
+  var input=document.getElementById('delete-confirm-input').value.trim();
+  if(input!=='DELETE'){showToast('Type DELETE to confirm');return;}
+  if(!currentUser){closeDeleteAccount();return;}
+  try{
+    await fetch(SUPABASE_URL+'/rest/v1/profiles?id=eq.'+currentUser.id,{
+      method:'DELETE',
+      headers:{
+        'apikey':SUPABASE_ANON,
+        'Authorization':'Bearer '+(currentUser.access_token||SUPABASE_ANON),
+        'Accept-Profile':'public'
+      }
+    });
+  }catch(e){}
+  currentUser=null;
+  try{localStorage.removeItem('vb_user');}catch(e){}
+  closeDeleteAccount();
+  showToast('Account deleted. Sorry to see you go 🎣');
+  setTimeout(function(){
+    var overlay=document.getElementById('loc-overlay');
+    if(overlay)overlay.classList.remove('hidden');
+  },1000);
+}
+
 /* ══ LOGIN MODAL ══ */
 function openLoginModal(){
   showLoginForm();
@@ -4377,5 +4490,84 @@ openAddPin=function(x,y,lng,lat){
   document.getElementById('addpin-overlay').classList.add('show');
 };
 </script>
+<!-- ══ SETTINGS SIDE PANEL ══ -->
+<div id="settings-overlay" onclick="closeSettings()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900"></div>
+<div id="settings-panel" style="position:fixed;top:0;left:0;bottom:0;width:82%;max-width:360px;background:var(--surface,#0d1f2e);z-index:901;transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;border-right:1px solid rgba(255,255,255,.08)">
+
+  <!-- Profile Header -->
+  <div id="sp-profile" style="padding:48px 20px 20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:14px">
+    <div id="sp-avatar" style="width:56px;height:56px;border-radius:50%;background:var(--water-light,#1a85c4);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;flex-shrink:0">?</div>
+    <div>
+      <div id="sp-name" style="font-size:17px;font-weight:700;color:var(--text,#e8f4fd)">Guest</div>
+      <div id="sp-handle" style="font-size:13px;color:var(--water-light,#1a85c4);margin-top:2px">@angler</div>
+      <div id="sp-tier" style="margin-top:6px;display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(82,183,136,.2);color:#52b788">🆓 Free</div>
+    </div>
+  </div>
+
+  <!-- Upgrade Banner -->
+  <div id="sp-upgrade" onclick="openVip();closeSettings()" style="margin:14px;background:linear-gradient(135deg,rgba(26,133,196,.2),rgba(10,61,92,.4));border:1px solid rgba(26,133,196,.4);border-radius:12px;padding:14px;cursor:pointer">
+    <div style="font-size:15px;font-weight:700;color:var(--water-light,#1a85c4)">⚡ Upgrade to Pro</div>
+    <div style="font-size:12px;color:var(--muted,#6b9ab8);margin-top:3px">50 pins · Ad-free · Exclusive badges</div>
+    <div style="font-size:14px;font-weight:700;color:var(--amber,#e9c46a);margin-top:6px">$7.99/mo →</div>
+  </div>
+
+  <!-- Preferences -->
+  <div style="padding:16px 20px 6px;font-size:10px;font-weight:700;color:var(--muted,#6b9ab8);letter-spacing:.8px;text-transform:uppercase">Preferences</div>
+
+  <div class="sp-row">
+    <span class="sp-icon">🔔</span><span class="sp-label">Notifications</span>
+    <label class="sp-toggle"><input type="checkbox" id="sp-notif" checked onchange="saveSpPref('notif',this.checked)"><span class="sp-slider"></span></label>
+  </div>
+  <div class="sp-row">
+    <span class="sp-icon">📍</span><span class="sp-label">Location</span>
+    <label class="sp-toggle"><input type="checkbox" id="sp-location" checked onchange="saveSpPref('location',this.checked)"><span class="sp-slider"></span></label>
+  </div>
+  <div class="sp-row">
+    <span class="sp-icon">🔒</span><span class="sp-label">Private Profile</span>
+    <label class="sp-toggle"><input type="checkbox" id="sp-private" onchange="saveSpPref('private',this.checked)"><span class="sp-slider"></span></label>
+  </div>
+
+  <!-- Theme -->
+  <div class="sp-row" style="align-items:center">
+    <span class="sp-icon">🌙</span><span class="sp-label">Theme</span>
+    <div style="display:flex;gap:6px">
+      <button class="sp-theme-btn active" id="sp-theme-dark" onclick="setAppTheme('dark')">🌙</button>
+      <button class="sp-theme-btn" id="sp-theme-light" onclick="setAppTheme('light')">☀️</button>
+      <button class="sp-theme-btn" id="sp-theme-auto" onclick="setAppTheme('auto')">⚡</button>
+    </div>
+  </div>
+
+  <!-- Links -->
+  <div style="padding:16px 20px 6px;font-size:10px;font-weight:700;color:var(--muted,#6b9ab8);letter-spacing:.8px;text-transform:uppercase">Info</div>
+  <div class="sp-row sp-link" onclick="window.open('https://visbait.com/privacy','_blank')"><span class="sp-icon">📄</span><span class="sp-label">Privacy Policy</span><span style="color:var(--muted)">›</span></div>
+  <div class="sp-row sp-link" onclick="window.open('https://visbait.com/terms','_blank')"><span class="sp-icon">📋</span><span class="sp-label">Terms of Service</span><span style="color:var(--muted)">›</span></div>
+  <div class="sp-row sp-link"><span class="sp-icon">ℹ️</span><span class="sp-label">Version</span><span style="color:var(--muted);font-size:13px">1.0.0-beta</span></div>
+  <div class="sp-row sp-link"><span class="sp-icon">🔨</span><span class="sp-label">Build</span><span style="color:var(--muted);font-size:13px">2026.05</span></div>
+
+  <!-- Account -->
+  <div style="padding:16px 20px 6px;font-size:10px;font-weight:700;color:var(--muted,#6b9ab8);letter-spacing:.8px;text-transform:uppercase">Account</div>
+  <div class="sp-row sp-link" onclick="signOut();closeSettings()"><span class="sp-icon">🚪</span><span class="sp-label" style="color:var(--amber,#e9c46a)">Sign Out</span></div>
+  <div class="sp-row sp-link" onclick="openDeleteAccount()"><span class="sp-icon">🗑️</span><span class="sp-label" style="color:#bc4749">Delete Account</span></div>
+
+  <div style="height:40px"></div>
+</div>
+
+<!-- ══ DELETE ACCOUNT MODAL ══ -->
+<div id="delete-account-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;align-items:center;justify-content:center">
+  <div style="background:var(--surface,#0d1f2e);border:1px solid rgba(188,71,73,.4);border-radius:16px;padding:28px;max-width:380px;width:90%;margin:auto">
+    <div style="font-size:36px;text-align:center;margin-bottom:12px">⚠️</div>
+    <div style="font-size:18px;font-weight:700;color:#e8f4fd;text-align:center;margin-bottom:10px">Delete Account</div>
+    <div style="font-size:14px;color:#6b9ab8;text-align:center;line-height:1.6;margin-bottom:20px">This will permanently delete your account, all your pins, listings, and threads. <strong style="color:#bc4749">This cannot be undone.</strong></div>
+    <div style="margin-bottom:16px">
+      <label style="font-size:13px;color:#6b9ab8;display:block;margin-bottom:6px">Type <strong style="color:#e8f4fd">DELETE</strong> to confirm</label>
+      <input type="text" id="delete-confirm-input" placeholder="Type DELETE here" style="width:100%;padding:10px 14px;background:#112233;border:1px solid rgba(188,71,73,.4);border-radius:10px;color:#e8f4fd;font-size:14px;outline:none;box-sizing:border-box"/>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button onclick="closeDeleteAccount()" style="flex:1;padding:12px;background:transparent;border:1px solid rgba(255,255,255,.1);border-radius:10px;color:#6b9ab8;cursor:pointer;font-size:14px">Cancel</button>
+      <button onclick="confirmDeleteAccount()" style="flex:1;padding:12px;background:#bc4749;border:none;border-radius:10px;color:#fff;cursor:pointer;font-size:14px;font-weight:700">Delete Forever</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
