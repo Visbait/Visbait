@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>VisBait Admin</title>
   <!-- Keys from gitignored config.js -->
+  <script src="/config.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
@@ -199,9 +200,37 @@
     #toast.t-warn{border-color:var(--warn);color:var(--warn)}
 
     /* ── RESPONSIVE ── */
+    /* ── MOBILE RESPONSIVE ── */
     @media(max-width:768px){
-      .sidebar{display:none}
-      .main{padding:16px}
+      .sidebar{ display:none }
+      .main{ padding:12px }
+      .stats-grid{ grid-template-columns:repeat(2,1fr);gap:10px }
+      .stat-card{ padding:14px }
+      .stat-card .s-val{ font-size:22px }
+      .tbl th,.tbl td{ padding:8px 10px;font-size:12px }
+      .table-header{ flex-direction:column;gap:8px;align-items:flex-start }
+      .xp-row{ flex-direction:column }
+      .xp-row .btn{ width:100%;margin-top:4px }
+      .modal-box{ margin:12px;padding:20px }
+      .login-box{ margin:16px;padding:28px }
+
+      /* Mobile bottom nav */
+      .mobile-nav{
+        display:flex;position:fixed;bottom:0;left:0;right:0;
+        background:var(--surface);border-top:1px solid var(--border);
+        z-index:200;padding:8px 0 20px;
+      }
+      .mobile-nav-item{
+        flex:1;display:flex;flex-direction:column;align-items:center;
+        gap:3px;cursor:pointer;padding:4px 0;color:var(--muted);font-size:10px;
+      }
+      .mobile-nav-item.active{color:var(--water-light)}
+      .mobile-nav-item .mn-icon{font-size:20px}
+      .layout{ padding-bottom:70px }
+      .top-bar .brand{ font-size:16px }
+    }
+    @media(min-width:769px){
+      .mobile-nav{ display:none }
     }
   </style>
 </head>
@@ -558,6 +587,37 @@
 
     </main>
   </div>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<div class="mobile-nav">
+  <div class="mobile-nav-item active" id="mn-dashboard" onclick="showPage('dashboard',null);setMobileNav('dashboard')">
+    <span class="mn-icon">📊</span><span>Dashboard</span>
+  </div>
+  <div class="mobile-nav-item" id="mn-users" onclick="showPage('users',null);setMobileNav('users')">
+    <span class="mn-icon">👤</span><span>Users</span>
+  </div>
+  <div class="mobile-nav-item" id="mn-billing" onclick="showPage('billing',null);setMobileNav('billing')">
+    <span class="mn-icon">💳</span><span>Billing</span>
+  </div>
+  <div class="mobile-nav-item" id="mn-xp" onclick="showPage('xp',null);setMobileNav('xp')">
+    <span class="mn-icon">⭐</span><span>XP</span>
+  </div>
+  <div class="mobile-nav-item" id="mn-more" onclick="toggleMobileMore()">
+    <span class="mn-icon">☰</span><span>More</span>
+  </div>
+</div>
+
+<!-- MOBILE MORE MENU -->
+<div id="mobile-more-menu" style="display:none;position:fixed;bottom:70px;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);z-index:199;padding:8px 0">
+  <div onclick="showPage('pins',null);closeMobileMore()" style="padding:14px 20px;color:var(--text);font-size:14px;border-bottom:1px solid var(--border)">📍 Map Pins</div>
+  <div onclick="showPage('listings',null);closeMobileMore()" style="padding:14px 20px;color:var(--text);font-size:14px;border-bottom:1px solid var(--border)">🛒 Listings</div>
+  <div onclick="showPage('threads',null);closeMobileMore()" style="padding:14px 20px;color:var(--text);font-size:14px;border-bottom:1px solid var(--border)">💬 Threads</div>
+  <div onclick="showPage('reports',null);closeMobileMore()" style="padding:14px 20px;color:var(--text);font-size:14px;border-bottom:1px solid var(--border)">🚩 Reports</div>
+  <div onclick="showPage('support',null);closeMobileMore()" style="padding:14px 20px;color:var(--text);font-size:14px;border-bottom:1px solid var(--border)">💌 Support</div>
+  <div onclick="showPage('announce',null);closeMobileMore()" style="padding:14px 20px;color:var(--text);font-size:14px;border-bottom:1px solid var(--border)">📣 Announce</div>
+  <div onclick="showPage('borders',null);closeMobileMore()" style="padding:14px 20px;color:var(--text);font-size:14px;border-bottom:1px solid var(--border)">🖼️ Borders</div>
+  <div onclick="showPage('logs',null);closeMobileMore()" style="padding:14px 20px;color:var(--text);font-size:14px">📋 Audit Log</div>
 </div>
 
 <!-- CONFIRM MODAL -->
@@ -1308,6 +1368,22 @@ function fmtDate(s){ if(!s)return '—'; var d=new Date(s); return d.toLocaleDat
 
 /* ─── CLOSE MODAL ON OVERLAY CLICK ─── */
 document.getElementById('confirm-modal').addEventListener('click',function(e){ if(e.target===this)closeModal(); });
+
+/* ─── MOBILE NAV ─── */
+function setMobileNav(name){
+  document.querySelectorAll('.mobile-nav-item').forEach(el=>el.classList.remove('active'));
+  var el = document.getElementById('mn-'+name);
+  if(el) el.classList.add('active');
+}
+function toggleMobileMore(){
+  var m = document.getElementById('mobile-more-menu');
+  m.style.display = m.style.display==='none' ? 'block' : 'none';
+}
+function closeMobileMore(){
+  document.getElementById('mobile-more-menu').style.display='none';
+  document.querySelectorAll('.mobile-nav-item').forEach(el=>el.classList.remove('active'));
+  document.getElementById('mn-more').classList.add('active');
+}
 </script>
 </body>
 </html>
