@@ -254,6 +254,7 @@
       <div class="nav-item" onclick="showPage('borders',this)"><span class="icon">🖼️</span>Borders</div>
       <div class="nav-item" onclick="showPage('announce',this)"><span class="icon">📣</span>Announce</div>
       <div class="nav-section">Logs</div>
+      <div class="nav-item" onclick="showPage('billing',this)"><span class="icon">💳</span>Billing</div>
       <div class="nav-item" onclick="showPage('logs',this)"><span class="icon">📋</span>Audit Log</div>
     </nav>
 
@@ -522,6 +523,40 @@
         </div>
       </div>
 
+      <!-- BILLING -->
+      <div id="page-billing" class="page">
+        <div class="page-title">Billing & Revenue</div>
+        <div class="page-sub">Stripe subscriptions and revenue overview</div>
+
+        <div class="stats-grid" id="billing-stats">
+          <div class="loading"><span class="spinner"></span>Loading…</div>
+        </div>
+
+        <div class="table-wrap">
+          <div class="table-header">
+            <h3>Active Subscriptions</h3>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-ghost btn-sm" onclick="loadBilling('active')">Active</button>
+              <button class="btn btn-ghost btn-sm" onclick="loadBilling('all')">All</button>
+              <button class="btn btn-ghost btn-sm" onclick="loadBilling('past_due')">Past Due</button>
+              <button class="btn btn-ghost btn-sm" onclick="loadBilling('canceled')">Canceled</button>
+            </div>
+          </div>
+          <table class="tbl">
+            <thead><tr><th>Customer</th><th>Plan</th><th>Status</th><th>Amount</th><th>Started</th><th>Next Bill</th></tr></thead>
+            <tbody id="billing-tbody"><tr><td colspan="6" class="loading"><span class="spinner"></span>Loading…</td></tr></tbody>
+          </table>
+        </div>
+
+        <div class="table-wrap">
+          <div class="table-header"><h3>Recent Billing Events</h3><button class="btn btn-ghost btn-sm" onclick="loadBillingEvents()">Refresh</button></div>
+          <table class="tbl">
+            <thead><tr><th>Email</th><th>Event</th><th>Tier</th><th>Date</th></tr></thead>
+            <tbody id="billing-events-tbody"><tr><td colspan="4" class="loading"><span class="spinner"></span>Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
     </main>
   </div>
 </div>
@@ -628,6 +663,7 @@ function showPage(name, el){
   if(name==='reports') loadReports();
   if(name==='support') loadSupport();
   if(name==='borders') loadBordersLog();
+  if(name==='billing') { loadBilling('active'); loadBillingEvents(); }
 }
 
 /* ─── SUPABASE HELPERS ─── */
@@ -1172,6 +1208,91 @@ async function closeTicket(id){
   await logAction('CLOSE_TICKET','Closed support ticket',id);
   toast('Ticket closed','t-warn');
   loadSupport();
+}
+
+/* ─── BILLING ─── */
+var STRIPE_PRICE_MAP = {
+  'price_1TYWw2QumanVqQxDucW38ku4': {name:'Pro', amount:'$7.99/mo'},
+  'price_1TYWw7QumanVqQxDJp5djM41': {name:'Elite', amount:'$14.99/mo'}
+};
+
+async function loadBilling(status){
+  status = status || 'active';
+  var tbody = document.getElementById('billing-tbody');
+  tbody.innerHTML = '<tr><td colspan="6" class="loading"><span class="spinner"></span>Loading…</td></tr>';
+
+  try {
+    // Fetch subscriptions via Supabase billing_events + stripe data
+    var subs = await sbGet('billing_events',
+      'select=*&order=created_at.desc&limit=200'
+    );
+
+    // Also fetch active subs count for stats
+    var active  = Array.isArray(subs) ? subs.filter(s=>s.tier!=='free'&&s.event_type!=='customer.subscription.deleted') : [];
+    var pro     = active.filter(s=>s.tier==='pro').length;
+    var elite   = active.filter(s=>s.tier==='elite').length;
+    var mrr     = (pro * 7.99) + (elite * 14.99);
+
+    document.getElementById('billing-stats').innerHTML = `
+      <div class="stat-card success"><div class="s-label">MRR (Est.)</div><div class="s-val">$${mrr.toFixed(2)}</div><div class="s-sub">Monthly recurring</div></div>
+      <div class="stat-card"><div class="s-label">Pro Subs</div><div class="s-val">${pro}</div><div class="s-sub">$7.99/mo each</div></div>
+      <div class="stat-card warn"><div class="s-label">Elite Subs</div><div class="s-val">${elite}</div><div class="s-sub">$14.99/mo each</div></div>
+      <div class="stat-card"><div class="s-label">Total Paying</div><div class="s-val">${pro+elite}</div><div class="s-sub">Active subscribers</div></div>
+    `;
+
+    // Show events as subscription table
+    var filtered = Array.isArray(subs) ? subs : [];
+    if(status==='active') filtered = filtered.filter(s=>s.tier!=='free');
+    if(status==='canceled') filtered = filtered.filter(s=>s.event_type==='customer.subscription.deleted');
+    if(status==='past_due') filtered = filtered.filter(s=>s.event_type==='invoice.payment_failed');
+
+    if(!filtered.length){
+      tbody.innerHTML='<tr><td colspan="6" style="padding:16px;color:var(--muted);text-align:center">No subscriptions found</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(s=>`
+      <tr>
+        <td>${esc(s.email||'—')}</td>
+        <td><span class="pill ${s.tier==='elite'?'pill-amber':'pill-blue'}">${s.tier||'—'}</span></td>
+        <td><span class="pill ${s.event_type&&s.event_type.includes('deleted')?'pill-red':s.event_type&&s.event_type.includes('failed')?'pill-amber':'pill-green'}">${
+          s.event_type&&s.event_type.includes('deleted')?'Canceled':
+          s.event_type&&s.event_type.includes('failed')?'Past Due':'Active'
+        }</span></td>
+        <td style="color:var(--amber)">${s.tier==='elite'?'$14.99':s.tier==='pro'?'$7.99':'—'}</td>
+        <td style="color:var(--muted)">${fmtDate(s.created_at)}</td>
+        <td style="color:var(--muted)">—</td>
+      </tr>`).join('');
+
+  } catch(e){
+    tbody.innerHTML='<tr><td colspan="6" style="padding:16px;color:var(--danger);text-align:center">Error loading billing data</td></tr>';
+    console.error(e);
+  }
+}
+
+async function loadBillingEvents(){
+  var tbody = document.getElementById('billing-events-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="4" class="loading"><span class="spinner"></span></td></tr>';
+  var list = await sbGet('billing_events','select=*&order=created_at.desc&limit=50');
+  if(!Array.isArray(list)||!list.length){
+    tbody.innerHTML='<tr><td colspan="4" style="padding:16px;color:var(--muted);text-align:center">No billing events yet</td></tr>';
+    return;
+  }
+  var icons = {
+    'customer.subscription.created':'✅',
+    'customer.subscription.updated':'🔄',
+    'customer.subscription.deleted':'❌',
+    'invoice.payment_succeeded':'💰',
+    'invoice.payment_failed':'⚠️'
+  };
+  tbody.innerHTML = list.map(e=>`
+    <tr>
+      <td>${esc(e.email||'—')}</td>
+      <td>${icons[e.event_type]||'📋'} <small>${esc(e.event_type||'—')}</small></td>
+      <td><span class="pill ${e.tier==='elite'?'pill-amber':e.tier==='pro'?'pill-blue':'pill-green'}">${e.tier||'free'}</span></td>
+      <td style="color:var(--muted)">${fmtDate(e.created_at)}</td>
+    </tr>`).join('');
 }
 
 /* ─── TOAST ─── */
